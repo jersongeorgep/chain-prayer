@@ -1,0 +1,93 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+class Printdata extends Admin_Controller {
+	function __construct()
+		{
+			parent::__construct();
+			$this->data['page_menu'] = 'Chain Prayer';
+			//isLogedUser();	
+		}
+
+	public function index(){
+		$this->data['page_title'] = 'Group wise';
+		//$this->data['centerfhs'] = $this->Centerfhs_m->order_by('id', 'desc')->get_all();
+		$this->data['center_fh'] 	= $this->Centerfhs_m->get_all();
+		$this->data['times'] 		= $this->Times_m->get_all();
+		$this->data['languages'] 	= $this->Languages_m->get_all();
+		$this->data['load_page'] 	= "prayerchain/group_wise/group_wise_list";
+		$this->template->admintemplate($this->data);
+	}
+
+	public function get_groups_in_center(){
+		$val = $this->input->post(NULL, true);
+		$data = $this->db->select('group_no')->from('members')->where('center_id', $val['center_id'])->order_by('group_no', 'asc')->group_by('group_no')->get()->result();
+		echo json_encode($data);
+	}
+
+	public function get_group_wise_data(){
+		$values = $this->input->post(NULL, true);
+		$this->data['language'] = $this->Languages_m->get($values['lang_id']);
+		$this->data['left_time'] = $this->Times_m->limit(16)->get_all();
+		$this->data['right_time'] = $this->Times_m->limit(12,16)->get_all();
+		$this->data['headers'] = $this->db->select('*')->from('header_data')->where('lang_id', $values['lang_id'])->get()->row();
+		$this->data['terms'] = $this->db->select('*')->from('terms')->where('lang_id', $values['lang_id'])->get()->row();
+		$this->data['center_id'] = $values['center_id'];
+		$this->data['group_no'] = $values['group_no'];
+		if($values['btn_search'] == 'search'){
+			$this->load->view('prayerchain/group_wise/view_group_wise', $this->data);
+		}else{
+			$filename = time()."_order.pdf";
+			$html = $this->load->view('prayerchain/group_wise/view_group_wise', $this->data, true);
+			$this->load->library('M_pdf');
+			$this->m_pdf->pdf->WriteHTML($html);
+			$this->m_pdf->pdf->Output("./assets/pdfs/".$filename, "D");
+		}
+	}
+
+
+	public function get_local_fhs(){
+		$val = $this->input->post(NULL, true);
+		$data = $this->db->select('id, localName')->from('local_fhs as lf')->where('center_id', $val['center_id'])->order_by('localName', 'asc')->get()->result();
+		echo json_encode($data);
+	}
+
+	public function get_group_number(){
+		$val = $this->input->post(NULL, true);
+		$group_code = get_group_number($val['centerId'], $val['timeId']);
+		echo $group_code;
+	}
+
+	public function members_wise(){
+		$this->data['page_title'] = 'Member wise';
+		//$this->data['centerfhs'] = $this->Centerfhs_m->order_by('id', 'desc')->get_all();
+		$this->data['center_fh'] 	= $this->Centerfhs_m->get_all();
+		$this->data['times'] 		= $this->Times_m->get_all();
+		$this->data['languages'] 	= $this->Languages_m->get_all();
+		$this->data['load_page'] 	= "prayerchain/member_wise/member_wise_list";
+		$this->template->admintemplate($this->data);
+	}
+
+	public function get_members(){
+		$val = $this->input->post(NULL, true);
+		$members = $this->db->select('*')->from('members')->where('center_id', $val['centerId'])->where('group_no', $val['group_no'])->get()->result();
+		echo json_encode($members);
+	}
+
+	public function get_member_wise_data(){
+		$values = $this->input->post(NULL, true);
+		//$this->data['language'] = $this->Languages_m->get($values['lang_id']);
+		$this->db->select('m.*, l.localName, pt.prayer_time')->from('members as m')->join('local_fhs as l', 'l.id = m.local_id', 'left')->join('prayer_time as pt', 'pt.id= m.time_id', 'left')->where('m.center_id', $values['center_id'])->where('m.group_no', $values['group_no']);
+		if($values['members'] != 'all'){
+			$this->data['viewMembers'] = $this->db->where('m.id', $values['members'])->get()->result();
+		}else{
+			$this->data['viewMembers'] = $this->db->get()->result();
+		}
+		$this->data['left_time'] = $this->Times_m->limit(16)->get_all();
+		$this->data['right_time'] = $this->Times_m->limit(12,16)->get_all();
+		$this->data['center_id'] = $values['center_id'];
+		$this->data['group_no'] = $values['group_no'];
+		$this->load->view('prayerchain/member_wise/view_member_wise', $this->data);
+	}
+
+	
+}
