@@ -33,15 +33,8 @@ class Printdata extends Admin_Controller {
 		$this->data['terms'] = $this->db->select('*')->from('terms')->where('lang_id', $values['lang_id'])->get()->row();
 		$this->data['center_id'] = $values['center_id'];
 		$this->data['group_no'] = $values['group_no'];
-		if($values['btn_search'] == 'search'){
-			$this->load->view('prayerchain/group_wise/view_group_wise', $this->data);
-		}else{
-			$filename = time()."_order.pdf";
-			$html = $this->load->view('prayerchain/group_wise/view_group_wise', $this->data, true);
-			$this->load->library('M_pdf');
-			$this->m_pdf->pdf->WriteHTML($html);
-			$this->m_pdf->pdf->Output("./assets/pdfs/".$filename, "D");
-		}
+		$this->load->view('prayerchain/group_wise/view_group_wise', $this->data);
+		
 	}
 
 
@@ -86,7 +79,37 @@ class Printdata extends Admin_Controller {
 		$this->data['right_time'] = $this->Times_m->limit(12,16)->get_all();
 		$this->data['center_id'] = $values['center_id'];
 		$this->data['group_no'] = $values['group_no'];
+		$this->data['member_value'] = $values['members'];
+
 		$this->load->view('prayerchain/member_wise/view_member_wise', $this->data);
+	}
+
+	public function print_group_wise($center_id, $group_no, $lang_id){
+		//$values = $this->input->post(NULL, true);
+		$this->data['language'] = $this->Languages_m->get($lang_id);
+		$this->data['left_time'] = $this->Times_m->limit(16)->get_all();
+		$this->data['right_time'] = $this->Times_m->limit(12,16)->get_all();
+		$this->data['headers'] = $this->db->select('*')->from('header_data')->where('lang_id', $lang_id)->get()->row();
+		$this->data['terms'] = $this->db->select('*')->from('terms')->where('lang_id', $lang_id)->get()->row();
+		$this->data['center_id'] = $center_id;
+		$this->data['group_no'] = $group_no;
+		$this->load->view('prayerchain/group_wise/print_group_wise', $this->data);
+	}
+
+	public function print_member_wise($center_id, $group_no, $members){
+		//$values = $this->input->post(NULL, true);
+		//$this->data['language'] = $this->Languages_m->get($values['lang_id']);
+		$this->db->select('m.*, l.localName, pt.prayer_time')->from('members as m')->join('local_fhs as l', 'l.id = m.local_id', 'left')->join('prayer_time as pt', 'pt.id= m.time_id', 'left')->where('m.center_id', $center_id)->where('m.group_no', $group_no);
+		if($members != 'all'){
+			$this->data['viewMembers'] = $this->db->where('m.id', $members)->get()->result();
+		}else{
+			$this->data['viewMembers'] = $this->db->get()->result();
+		}
+		$this->data['left_time'] = $this->Times_m->limit(16)->get_all();
+		$this->data['right_time'] = $this->Times_m->limit(12,16)->get_all();
+		$this->data['center_id'] = $center_id;
+		$this->data['group_no'] = $group_no;
+		$this->load->view('prayerchain/member_wise/print_member_wise', $this->data);
 	}
 
 	

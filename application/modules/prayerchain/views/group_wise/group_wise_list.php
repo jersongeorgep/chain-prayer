@@ -49,7 +49,6 @@
         								</div>
 										<div class="form-group col-sm-12 col-md-2 pt-2">
         									<button type="submit" class="btn btn-sm btn-success mt-4" name="btn_search" id="btn_search" value="search"><i class="fa fa-search"></i> Find</button>
-        									<button type="submit" class="btn btn-sm btn-danger mt-4" name="btn_search" id="btn_search" value="print"><i class="fa fa-print"></i> Print</button>
         								</div>
         							</form>
         						</div>
