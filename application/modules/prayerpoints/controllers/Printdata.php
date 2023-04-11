@@ -20,7 +20,7 @@ class Printdata extends Admin_Controller {
 
 	public function get_groups_in_center(){
 		$val = $this->input->post(NULL, true);
-		$data = $this->db->select('group_no')->from('members')->where('center_id', $val['center_id'])->order_by('id', 'asc')->group_by('group_no')->get()->result();
+		$data = $this->db->select('group_no')->from('members')->where('center_id', $val['center_id'])->order_by('group_no', 'asc')->group_by('group_no')->get()->result();
 		echo json_encode($data);
 	}
 

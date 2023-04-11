@@ -313,26 +313,27 @@ function code_generate($str){
 function get_group_number($centerId, $timeId){
     $CI =& get_instance();
     $settings = $CI->db->select('*')->from('settings')->where('id', 1)->get()->row();
-    $selecedCenters = explode(',', $settings->group_center);
     $center_fh = $CI ->Centerfhs_m->get($centerId);
     $time_details  = $CI ->Times_m->get($timeId);
-    $get_last_group = $CI->db->select('*')->from('members')->where('center_id', $centerId)->where('time_id',$timeId)->order_by('group_no', 'desc')->get()->row();
+    $selecedCenters = explode(',', $settings->group_center);
+    $get_last_group = $CI->db->select('*')->from('members')->where('center_id', $centerId)->where('time_id',$timeId)->order_by('id', 'desc')->get()->row();
+
     if(!empty($get_last_group)){
         $currentGroup = $get_last_group->group_no;
         $code = explode("-", $currentGroup);
-        for($i = 0; $i < (int)$code[1]; $i++){
+        for($i = 0; $i < ((int)$code[1]); $i++){
             $previous_groups = $code[0]. '-'. ($i + 1) ; 
-            $check_vacant = $CI->db->select('COUNT(group_no) as groupMembers')->from('members')->where('group_no', $previous_groups)->where('time_id', $timeId)->order_by("group_no", "asc")->group_by('group_no')->get()->row();
-            if($check_vacant->groupMembers < $time_details ->allowed_member){
+            $check_vacant = $CI->db->select('COUNT(group_no) as groupMembers')->from('members')->where('group_no', $previous_groups)->where('time_id', $timeId)->where('center_id', $centerId)->order_by("id", "asc")->group_by('group_no')->get()->row();
+            $vacant = (isset($check_vacant->groupMembers))?$check_vacant->groupMembers : 0;
+            if( $vacant < $time_details ->allowed_member){
                 $group_code = $code[0].'-'.  ($i + 1);
-                return  $group_code; 
-                exit();
+                return  $group_code;
+                exit(); 
             }
         }
         $group_code = $code[0].'-'. (((int) $code[1]) + 1);
         return  $group_code; 
         exit();
-
     }else{
         if(in_array($centerId, $selecedCenters)){
             $group_code = $center_fh->center_code. "-". 1;

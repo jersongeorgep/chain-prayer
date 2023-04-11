@@ -11,47 +11,9 @@
         	<div class="col-12">
         		<!-- /.card -->
         		<div class="card">
-        			<!-- /.card-header -->
-        			<div class="card-body">
-        				<div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-        					<div class="row">
-        						<div class="col-sm-12">
-        							<form  method="POST" id="quickForm" class="row" enctype="multipart/form-data">
-        								<div class="form-group col-4">
-        									<label for="center_id">Center FH <sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
-        										<option value="">Select</option>
-        										<?php if ($center_fh) : ?>
-        											<?php foreach ($center_fh as $value) : ?>
-        												<option value="<?= $value->id; ?>"><?= $value->centerName; ?></option>
-        											<?php endforeach; ?>
-        										<?php endif; ?>
-        									</select>
-        								</div>
-        								<div class="form-group col-3 pt-2">
-        									<button type="submit" class="btn btn-sm btn-success mt-4" id="btn_search"><i class="fa fa-search"></i> Find</button>
-        								</div>
-        							</form>
-        						</div>
-
-        					</div>
-
-        				</div>
-        			</div>
-        			<!-- /.card-body -->
-        		</div>
-        		<!-- /.card -->
-        	</div>
-        	<!-- /.col -->
-        </div>
-
-        <div class="row">
-        	<div class="col-12">
-        		<!-- /.card -->
-        		<div class="card">
         			<div class="card-header">
         				<h3 class="card-title">
-        					<span><a href="<?= site_url('masters/local-fhs/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
+        					<span><a href="<?= site_url('prayerpoints/makeserialnumber/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
         					<span><button type="button" id="delete_btn" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button></span>
         				</h3>
         			</div>
@@ -65,15 +27,21 @@
         									<tr>
         										<th class="text-center" width="7%">Sl. No</th>
         										<th class="text-center" width="2%"> <input type="checkbox" name="select_all" id="select_all" /> </th>
-        										<th width="10%" class="text-center">Code</th>
-        										<th class="text-center">Local</th>
-        										<th class="text-center">Center Code</th>
-        										<th class="text-center">Center </th>
-        										<th class="text-center" width="8%">Action</th>
+        										<th class="text-center">Serial Nos </th>
+												<th class="text-center" width="8%">Action</th>
         									</tr>
         								</thead>
-        								<tbody>
-        									
+        								<tbody id="show_data">
+											<?php if(!empty($serial_nos)): $slNo = 1; ?>
+        									<?php  foreach($serial_nos as $val): ?>
+												<tr>
+													<td><?= $slNo; ?></td>
+													<td><input type="checkbox" name="ids[]" id="ids_" value="<?= $val->id; ?>"></td>
+													<td><?= $val->serial_no; ?></td>
+													<td><a href="<?= site_url('prayerpoints/makeserialnumber/edit/' . $val->id); ?>" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a></td>
+												</tr>
+											<?php $slNo++;  endforeach; ?>
+											<?php endif; ?>
         								</tbody>
         							</table>
         						</div>
@@ -112,71 +80,22 @@
 
 				$('.select2').select2();
 
-        		table = $("#example1").DataTable({
-					"dom": 'Blfrtip',
-        			"responsive": true,
-        			"lengthChange": false,
-        			"autoWidth": false,
-					"columns": [
-						{ "data": "sl_no" },
-						{ "data": "select" },
-						{ "data": "code" },
-						{ "data": "localName" },
-						{ "data": "centerCode" },
-						{ "data": "centerName" },
-						{ "data": "action" }
-					],
-        			'columnDefs': [{
-        				'targets': [1], // column index (start from 0)
-        				'orderable': false, // set orderable false for selected columns
-        			}],
-        			"buttons": [{extend: "excel",
-						exportOptions: {
-							columns: [ 0, 2, 3, 4, 5 ] 
-						},
-					},{extend: "pdf",
-						exportOptions: {
-							columns: [ 0, 2, 3, 4, 5 ] 
-						},
-					}, {extend: "print",
-						exportOptions: {
-							columns: [ 0, 2, 3, 4, 5 ] 
-						},	
+        		$("#example1").DataTable({
+					"responsive": true,
+					"lengthChange": false,
+					"autoWidth": false,
+					'columnDefs': [{
+						'targets': [1], // column index (start from 0)
+						'orderable': false, // set orderable false for selected columns
 					}]
-        		});
+					//"buttons": ["excel", "pdf", "print", "colvis"]
+				}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
         		$("#select_all").click(function() {
         			$('input:checkbox').not(this).prop('checked', this.checked);
         		});
 
-				$('#quickForm').validate({
-                    rules: {
-                        center_id: {
-                            required: true
-                        }
-                    },
-                    messages: {
-                        center_id: {
-                            required: "Please choose  Center",
-                        }
-                    },
-                    errorElement: 'span',
-                    errorPlacement: function(error, element) {
-                        error.addClass('invalid-feedback');
-                        element.closest('.form-group').append(error);
-                    },
-                    highlight: function(element, errorClass, validClass) {
-                        $(element).addClass('is-invalid');
-                    },
-                    unhighlight: function(element, errorClass, validClass) {
-                        $(element).removeClass('is-invalid');
-                    },
-					submitHandler:function(){
-						get_local_fhs_data();
-					}
-                });
-
-        		$('#delete_btn').on('click', function() {
+				$('#delete_btn').on('click', function() {
         			var post_arr = [];
         			$('#show_data input[type=checkbox]').each(function() {
         				if (jQuery(this).is(":checked")) {
@@ -188,7 +107,7 @@
         				if (confirm("Do you really want to delete records?")) {
         					$.ajax({
         						type: "POST",
-        						url: base_url + "masters/local-fhs/delete",
+        						url: base_url + "prayerpoints/makeserialnumber/delete",
         						async: false,
         						cache: false,
         						data: {
@@ -201,7 +120,7 @@
         							toastr.error("Data Deleted");
         							setTimeout(() => {
         								window.location.reload();
-        							}, 500);
+        							}, 500); 
         						}
         					});
         				}
@@ -212,19 +131,4 @@
 
         	});
 
-			function get_local_fhs_data(){
-				var form_data = $('#quickForm').serializeArray();
-				 $.ajax({
-					type : "POST",
-					url : base_url + 'masters/local-fhs/get_local_fh_data',
-					data : form_data,
-					cache : false,
-					async : false,
-					success : function(response){
-						var data = JSON.parse(response);
-						table.clear();
-       					table.rows.add(data).draw(false);
-					}
-				}); 	
-			}
         </script>

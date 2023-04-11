@@ -18,48 +18,18 @@
         						<div class="col-sm-12">
         							<form  method="POST" id="quickForm" class="row" enctype="multipart/form-data">
         								<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="center_id">Center<sup class="text-danger">*</sup></label>
+        									<label for="center_id">Serial No<sup class="text-danger">*</sup></label>
         									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
         										<option value="">Select</option>
-												<option value="all">ALL</option>
-        										<?php if ($center_fh) : ?>
-        											<?php foreach ($center_fh as $value) : ?>
-        												<option value="<?= $value->id; ?>"><?= $value->centerName; ?></option>
+												<?php if ($serial_nos) : ?>
+        											<?php foreach ($serial_nos as $value) : ?>
+        												<option value="<?= $value->id; ?>"><?= $value->serial_no; ?></option>
         											<?php endforeach; ?>
         										<?php endif; ?>
         									</select>
         								</div>
-										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="local_fh">Local<sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="local_fh" id="local_fh">
-        										<option value="">Select</option>
-        										<option value="all">All</option>
-        										
-        									</select>
-        								</div>
-										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="group_no">Groups<sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="group_no" id="group_no">
-        										<option value="">Select</option>
-        										<option value="all">All</option>
-        										
-        									</select>
-        								</div>
-										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="time_id">Time<sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="time_id" id="time_id">
-        										<option value="">Select</option>
-												<option value="all">All</option>
-        										<?php if ($times) : ?>
-        											<?php foreach ($times as $value) : ?>
-        												<option value="<?= $value->id; ?>"><?= $value->prayer_time; ?></option>
-        											<?php endforeach; ?>
-        										<?php endif; ?>
-        									</select>
-        								</div>
-        								<div class="form-group col-sm-12 col-md-3 col-lg-3 pt-2">
+										<div class="form-group col-sm-12 col-md-3 col-lg-3 pt-2 mt-4">
         									<button type="submit" class="btn btn-sm btn-success" id="btn_search"><i class="fa fa-search"></i> Find</button>
-											<a id="print_btn" class="btn btn-sm btn-primary disabled" target="_blank" ><i class="fa fa-print"></i> Print</a>
         								</div>
         							</form>
         						</div>
@@ -81,7 +51,7 @@
         		<div class="card">
         			<div class="card-header">
         				<h3 class="card-title">
-        					<span><a href="<?= site_url('prayerchain/members/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
+        					<span><a href="<?= site_url('prayerpoints/Prayerpoints/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
         					<span><button type="button" id="delete_btn" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button></span>
         				</h3>
         			</div>

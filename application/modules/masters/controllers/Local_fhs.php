@@ -16,15 +16,16 @@ class Local_fhs extends Admin_Controller {
 	}
 	public function get_local_fh_data(){
 		$values = $this->input->post(NULL, true);
-		$data = $this->db->select('l.id, l.code, l.localName, c.centerName')->from('local_fhs as l')->join('center_fhs as c', 'c.id = l.center_id', 'left')->where('l.center_id', $values['center_id'])->order_by('l.id', 'desc')->get()->result();
+		$data = $this->db->select('l.id, l.code, l.localName, c.centerName, c.center_code')->from('local_fhs as l')->join('center_fhs as c', 'c.id = l.center_id', 'left')->where('l.center_id', $values['center_id'])->order_by('l.id', 'desc')->get()->result();
 		$slNo =1 ;
 		foreach ($data as $key => $value) {
-			$lData[$key]['sl_no'] = $slNo;
-			$lData[$key]['select'] = '<input type="checkbox" name="ids[]" id="ids_" value="'. $value->id.'">';
-			$lData[$key]['code'] = ($value->code)?$value->code : code_generate($value->localName);
-			$lData[$key]['localName'] = $value->localName;
-			$lData[$key]['centerName'] = $value->centerName;
-			$lData[$key]['action'] = '<a href="'. site_url('masters/local-fhs/edit/' . $value->id) .'" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a>'; 
+			$lData[$key]['sl_no'] 		= $slNo;
+			$lData[$key]['select'] 		= '<input type="checkbox" name="ids[]" id="ids_" value="'. $value->id.'">';
+			$lData[$key]['code'] 		= ($value->code)?$value->code : code_generate($value->localName);
+			$lData[$key]['localName'] 	= $value->localName;
+			$lData[$key]['centerCode'] 	= $value->center_code;
+			$lData[$key]['centerName'] 	= $value->centerName;
+			$lData[$key]['action'] 		= '<a href="'. site_url('masters/local-fhs/edit/' . $value->id) .'" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a>'; 
 			$slNo++;
 		}
 		echo json_encode($lData);

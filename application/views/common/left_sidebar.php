@@ -48,9 +48,15 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= site_url('prayerchain/excel-import'); ?>" class="nav-link <?= (($page_title == "Excel_import") ? "active" : ""); ?>">
+              <a href="<?= site_url('prayerchain/excel-import'); ?>" class="nav-link <?= (($page_title == "Excel Import") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Excel Import</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?= site_url('prayerchain/printdata/faith-home-wise'); ?>" class="nav-link <?= (($page_title == "Faith Home wise") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Faith Home wise</p>
               </a>
             </li>
             <li class="nav-item">
@@ -63,6 +69,32 @@
               <a href="<?= site_url('prayerchain/printdata/members_wise'); ?>" class="nav-link <?= (($page_title == "Member wise") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Members wise</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item <?= ($page_menu == 'Chain Point') ? 'menu-open' : '' ?>">
+          <a href="#" class="nav-link <?= ($page_menu == 'Chain Point') ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-pen-nib"></i>
+            <p> Prayer Points <i class="fas fa-angle-left right"></i></p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?= site_url('prayerpoints/makeserialnumber'); ?>" class="nav-link <?= (($page_title == "Serial No List" || $page_title == "New Serial No" || $page_title == "Edit Serial No") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Make Serial Number</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?= site_url('prayerpoints/Prayerpoints'); ?>" class="nav-link <?= (($page_title == "Prayer Point List" || $page_title == "New Prayer Point" || $page_title == "Edit Prayer Point") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Payer Points</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="<?= site_url('prayerchain/printdata'); ?>" class="nav-link <?= (($page_title == "Group wise") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Serial Wise</p>
               </a>
             </li>
           </ul>
@@ -108,6 +140,21 @@
               <a href="<?= site_url('masters/headers-data'); ?>" class="nav-link <?= (($page_title == "All Headers" || $page_title == "New Header" || $page_title == "Edit Header") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Headers</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item <?= ($page_menu == 'Settings') ? 'menu-open' : '' ?>">
+          <a href="#" class="nav-link <?= ($page_menu == 'Settings') ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-cogs"></i>
+            <p> Settings <i class="fas fa-angle-left right"></i></p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="<?= site_url('settings') ?>" class="nav-link <?= (($page_title == "Separate Center") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Separate Centers</p>
               </a>
             </li>
           </ul>

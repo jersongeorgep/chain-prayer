@@ -8,6 +8,7 @@ class Admin_Controller extends MY_Controller {
 		$this->load->module('template');
 		$this->load->model(array(
 			'settings/Compnay_m',
+			'settings/Settings_m',
 			'masters/Times_m',
 			'masters/Centerfhs_m',
 			'masters/Localfhs_m',
@@ -15,7 +16,9 @@ class Admin_Controller extends MY_Controller {
 			'masters/Times_m',
 			'masters/Terms_m',
 			'masters/Headers_m',
-			'prayerchain/Members_m'
+			'prayerchain/Members_m',
+			'prayerpoints/Serial_nos_m'
+			
 			));
 		$this->load->helper('date');
 			if($this->session->userdata('loggedin') == TRUE){

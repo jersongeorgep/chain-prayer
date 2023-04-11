@@ -1,24 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <title>Prayer Group List</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="<?= site_url('assets/plugins/fontawesome-free/css/all.min.css'); ?>">
-    <link rel="stylesheet" href="<?= site_url('assets/dist/css/adminlte.min.css'); ?>">
-    <style type="text/css">body{ margin:0px; font-family:verdana,Arial;color:#000; font-family:Verdana, Geneva, sans-serif; font-size:12px;}
-    .table>tbody>tr>td,.table>tbody>tr>th { border-top: none !important; margin: 0px !important; padding: 0px !important; }
-    a{color:#000;text-decoration:none;}
-    @media print {
-      .page-break  { display:block; page-break-before:always; }
-      @page {
-        /* size: A4; */ /* DIN A4 standard, Europe */
-        margin:5mm 0mm 5mm 5mm;
-        }
-    }
-
-    </style>
-    </head>
-    <body onLoad="self.print()"><center>
 <?php if(!empty($viewMembers)): ?>
 <section class="invoice" id="group_list">
  <?php foreach ($viewMembers as  $memberValue): 
@@ -39,22 +18,22 @@
                 </tr>
                 <tr>
                     <td class="pt-0 pb-0">
-                        <h5 class="text-bold"><?= strtoupper('Prayer Chain Group'); ?> <?= $group_no; ?> <small><span class="pull-right"><?= date('d-m-Y'); ?></span></small></h5>
+                        <h5 class="text-bold"><?= strtoupper('Prayer Chain Group'); ?> <?= $memberValue->group_no; ?> <small><span class="pull-right"><?= date('d-m-Y'); ?></span></small></h5>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="col-6 m-0">
-        <table class="table table-sm p-0">
+    <div class="col-6">
+        <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($left_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $memberValue->lang_id) ?>
+                    <?php $members =  members_time_slot($center_id, $memberValue->group_no, $value->id, $memberValue->lang_id) ?>
                     <tr>
                         <td width="20%"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0 p-0 text-md"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
+                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
                             <?php endforeach; ?>
                         </td>
                     </tr>
@@ -62,15 +41,15 @@
             </tbody>
         </table>
     </div>
-    <div class="col-6 m-0">
-        <table class="table table-sm text-sm p-0">
+    <div class="col-6">
+        <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($right_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $memberValue->lang_id); ?>
+                    <?php $members =  members_time_slot($center_id, $memberValue->group_no, $value->id, $memberValue->lang_id); ?>
                     <tr>
                         <td width="20%"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0 p-0 text-md"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
+                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
                             <?php endforeach; ?>
                         </td>
                     </tr>
@@ -78,17 +57,17 @@
             </tbody>
         </table>
     </div>
-
-    <div class="col-12 mt-0 p-0">
-        <table class="table table-sm p-0 m-0">
+    <div class="col-12">
+        <table class="table table-sm">
             <tbody>
                 <tr>
                     <td colspan="3">
                         <h5 class="text-bold text-center"><?= $terms->title; ?></h5>
-                        <p class="text-sm m-0 p-0"><?= $terms->terms; ?></p>
+                        <p class="text-sm text-md"><?= $terms->terms; ?></p>
                     </td>
                 </tr>
-                <tr><td class="text-center text-md"><b><?= $memberValue->bro_sis; ?> <?= $memberValue->mal_name; ?> </b></td>
+                <tr>
+                    <td class="text-center text-md"><b><?= $memberValue->bro_sis; ?> <?= $memberValue->mal_name; ?> </b></td>
                     <td class="text-center text-lg"><b><?= $memberValue->localName; ?></b></td>
                     <td class="text-center text-lg"><b><?= $memberValue->prayer_time; ?></b></td>
                 </tr>
@@ -96,14 +75,13 @@
         </table>
     </div>
 </div>
-<div class="page-break"></div>
 <?php endforeach; ?>
 </section>
 <?php endif; ?>
-</center></body></html>
 <!-- <button type="button" class="btn btn-success btn-sm mt-2" id="printBtn" onclick="printMe()"><i class="fa fa-print"></i> Print</button> -->
+<a href="<?= site_url('prayerchain/printdata/print-local-faith-home-wise/'.$center_id.'/'.$local_id);?>" target="_blank" class="btn btn-success btn-sm mt-2"><i class="fa fa-print"></i> Print</a>
 <script>
-    /* function printMe() {
+    function printMe() {
     var disp_setting="toolbar=yes,location=no,";
         disp_setting+="directories=yes,menubar=yes,";
         disp_setting+="scrollbars=yes,width=1000, height=900, left=100, top=25";
@@ -127,5 +105,5 @@
         docprint.document.write('</center></body></html>');
         docprint.document.close();
             docprint.focus();
-        } */
+        }
 </script>

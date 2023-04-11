@@ -70,6 +70,9 @@ class Excel_import extends Admin_Controller {
 	}
 
 	public function save_bulk_data(){
+		ini_set('max_execution_time', 0); 
+		ini_set('memory_limit','2048M');
+
 		$centerCode = $this->input->post('center_code');
 		$localName 	= $this->input->post('local_name');
 		$langCode 	= $this->input->post('lang_code');
@@ -82,6 +85,7 @@ class Excel_import extends Admin_Controller {
 		$hinName 	= $this->input->post('hin_name');
 		$kanNmae 	= $this->input->post('kan_name');
 		$mobile		= $this->input->post('mobile');
+
 		for ($i=0; $i < count($centerCode); $i++) { 
 			
 			$prayer_time = formate_time($prayerTime[$i]);
@@ -114,6 +118,7 @@ class Excel_import extends Admin_Controller {
 				$this->Members_m->insert($data);
 			}
 		}
+
 		$this->session->set_flashdata("success", "Data saved successfully");
 		redirect('prayerchain/excel_import');
 	}

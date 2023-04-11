@@ -28,7 +28,7 @@
                     <tr>
                         <td width="20%"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
+                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
                             <?php endforeach; ?>
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                     <tr>
                         <td width="20%"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
+                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
                             <?php endforeach; ?>
                         </td>
                     </tr>

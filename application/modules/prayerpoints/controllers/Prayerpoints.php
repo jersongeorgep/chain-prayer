@@ -1,18 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Members extends Admin_Controller {
+class Prayerpoints extends Admin_Controller {
 	function __construct()
 		{
 			parent::__construct();
-			$this->data['page_menu'] = 'Chain Prayer';
+			$this->data['page_menu'] = 'Chain Point';
 			//isLogedUser();	
 		}
 	public function index(){
-		$this->data['page_title'] = 'Members List';
-		//$this->data['centerfhs'] = $this->Centerfhs_m->order_by('id', 'desc')->get_all();
+		$this->data['page_title'] = 'Prayer Point List';
+		$this->data['serial_nos'] = $this->Serial_nos_m->order_by('id', 'asc')->get_all();
 		$this->data['center_fh'] = $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
 		$this->data['times'] = $this->Times_m->get_all();
-		$this->data['load_page'] = "prayerchain/members/members_list";
+		$this->data['load_page'] = "prayerpoints/points/points_list";
 		$this->template->admintemplate($this->data);
 	}
 	public function get_groups_in_center(){

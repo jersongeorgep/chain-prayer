@@ -17,49 +17,26 @@
         					<div class="row">
         						<div class="col-sm-12">
         							<form  method="POST" id="quickForm" class="row" enctype="multipart/form-data">
-        								<div class="form-group col-sm-12 col-md-3 col-lg-3">
+        								<div class="form-group col-sm-12 col-md-3">
         									<label for="center_id">Center<sup class="text-danger">*</sup></label>
         									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
         										<option value="">Select</option>
-												<option value="all">ALL</option>
-        										<?php if ($center_fh) : ?>
+												<?php if ($center_fh) : ?>
         											<?php foreach ($center_fh as $value) : ?>
         												<option value="<?= $value->id; ?>"><?= $value->centerName; ?></option>
         											<?php endforeach; ?>
         										<?php endif; ?>
         									</select>
         								</div>
-										<div class="form-group col-sm-12 col-md-3 col-lg-3">
+										<div class="form-group col-sm-12 col-md-3">
         									<label for="local_fh">Local<sup class="text-danger">*</sup></label>
         									<select class="form-control form-control-sm select2" name="local_fh" id="local_fh">
         										<option value="">Select</option>
-        										<option value="all">All</option>
         										
         									</select>
         								</div>
-										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="group_no">Groups<sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="group_no" id="group_no">
-        										<option value="">Select</option>
-        										<option value="all">All</option>
-        										
-        									</select>
-        								</div>
-										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="time_id">Time<sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="time_id" id="time_id">
-        										<option value="">Select</option>
-												<option value="all">All</option>
-        										<?php if ($times) : ?>
-        											<?php foreach ($times as $value) : ?>
-        												<option value="<?= $value->id; ?>"><?= $value->prayer_time; ?></option>
-        											<?php endforeach; ?>
-        										<?php endif; ?>
-        									</select>
-        								</div>
-        								<div class="form-group col-sm-12 col-md-3 col-lg-3 pt-2">
-        									<button type="submit" class="btn btn-sm btn-success" id="btn_search"><i class="fa fa-search"></i> Find</button>
-											<a id="print_btn" class="btn btn-sm btn-primary disabled" target="_blank" ><i class="fa fa-print"></i> Print</a>
+										<div class="form-group col-sm-12 col-md-2 pt-2">
+        									<button type="submit" class="btn btn-sm btn-success mt-4" name="btn_search" id="btn_search" value="search"><i class="fa fa-search"></i> Find</button>
         								</div>
         							</form>
         						</div>
@@ -79,36 +56,12 @@
         	<div class="col-12">
         		<!-- /.card -->
         		<div class="card">
-        			<div class="card-header">
-        				<h3 class="card-title">
-        					<span><a href="<?= site_url('prayerchain/members/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
-        					<span><button type="button" id="delete_btn" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button></span>
-        				</h3>
-        			</div>
         			<!-- /.card-header -->
         			<div class="card-body">
         				<div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
         					<div class="row">
-        						<div class="col-sm-12">
-        							<table id="example1" class="table table-bordered table-striped dataTable dtr-inline table-sm text-sm" aria-describedby="example1_info">
-        								<thead>
-        									<tr>
-        										<th class="text-center" width="7%">Sl. No</th>
-        										<th class="text-center" width="2%"> <input type="checkbox" name="select_all" id="select_all" /> </th>
-        										<th class="text-center">Name </th>
-												<th width="15%" class="text-center">Mobile</th>
-        										<th width="10%" class="text-center">Time</th>
-        										<th width="10%" class="text-center">Local</th>
-        										<th width="10%" class="text-center">Center</th>
-												<th width="10%" class="text-center">Language</th>
-												<th width="10%" class="text-center">Group</th>
-        										<th class="text-center" width="8%">Action</th>
-        									</tr>
-        								</thead>
-        								<tbody id="show_data">
-        									
-        								</tbody>
-        							</table>
+        						<div class="col-sm-12" id="view_group_list">
+        							
         						</div>
         					</div>
 
@@ -145,42 +98,6 @@
 
 				$('.select2').select2();
 
-        		table = $("#example1").DataTable({
-					//"dom": 'Blfrtip',
-        			"responsive": true,
-        			"lengthChange": false,
-        			"autoWidth": false,
-					"columns": [
-						{ "data": "sl_no" },
-						{ "data": "select" },
-						{ "data": "name" },
-						{ "data": "mobile" },
-						{ "data": "time" },
-						{ "data": "local" },
-						{ "data": "center" },
-						{ "data": "language" },
-						{ "data": "group_no" },
-						{ "data": "action" }
-					],
-        			'columnDefs': [{
-        				'targets': [1], // column index (start from 0)
-        				'orderable': false, // set orderable false for selected columns
-        			}],
-        			/* "buttons": [{extend: "excel",
-						exportOptions: {
-							columns: [ 0, 2, 3, 4, 5, 6, 7, 8 ] 
-						},
-					},{extend: "pdf",
-						exportOptions: {
-							columns: [ 0, 2, 3, 4, 5, 6, 7, 8 ] 
-						},
-					}, {extend: "print",
-						exportOptions: {
-							columns: [ 0, 2, 3, 4, 5, 6, 7, 8 ] 
-						},	
-					}] */
-        		});
-
         		$("#select_all").click(function() {
         			$('input:checkbox').not(this).prop('checked', this.checked);
         		});
@@ -192,12 +109,6 @@
                         },
                         local_fh: {
                             required: true
-                        },
-                        group_no: {
-                            required: true
-                        },
-                        time_id: {
-                            required: true
                         }
                     },
                     messages: {
@@ -205,13 +116,7 @@
                             required: "Please choose  Center",
                         },
                         local_fh: {
-                            required: "Please choose  Local",
-                        },
-                        group_no: {
-                            required: "Please choose  Group",
-                        },
-                        time_id: {
-                            required: "Please choose  Time",
+                            required: "Please choose  Local faith home",
                         }
                     },
                     errorElement: 'span',
@@ -226,38 +131,28 @@
                         $(element).removeClass('is-invalid');
                     },
 					submitHandler:function(){
-						get_members_data();
+						get_faith_home_wise_data();
 					}
                 });
 
 				$("#center_id"). on('change', function(){
 					var center_id = this.value;
-					get_local_fhs(center_id);
 					$.ajax({
 						type : "POST",
-						url : base_url + 'prayerchain/members/get_groups_in_center',
+						url : base_url + 'prayerchain/members/get_local_fhs',
 						data : "center_id="+center_id,
 						cache : true,
 						async : true,
 						success : function (response) {
-							$('#group_no').empty();
-							html = '<option value="">Select</option> <option value="all">All</option>';
+							$('#local_fh').empty();
+							html = '<option value="">Select</option>';
 							var data = JSON.parse(response);
 							for (let i = 0; i < data.length; i++) {
-								html += '<option value="'+ data[i].group_no +'">'+ data[i].group_no +'</option>';
+								html += '<option value="'+ data[i].id +'">'+ data[i].localName +'</option>';
 							}
-							$('#group_no').append(html);
+							$('#local_fh').append(html);
 						}
 					});
-					
-				})
-
-				$('#time_id').on('change', function(){
-					var centerId = $('#center_id').val();
-					var localId = $('#local_fh').val();
-					var groupNo = $('#group_no').val();
-					var timeId = this.value;
-					$('#print_btn').removeClass('disabled').prop("href", base_url + "prayerchain/members/print-member-data/"+centerId+"/"+localId+"/"+groupNo+"/"+timeId);
 					
 				})
 
@@ -297,38 +192,18 @@
 
         	});
 
-			function get_members_data(){
+			function get_faith_home_wise_data(){
 				var form_data = $('#quickForm').serializeArray();
 				 $.ajax({
 					type : "POST",
-					url : base_url + 'prayerchain/members/get_members_data',
+					url : base_url + 'prayerchain/printdata/get_local_fh_wise_data',
 					data : form_data,
 					cache : false,
 					async : false,
 					success : function(response){
-						var data = JSON.parse(response);
-						table.clear();
-       					table.rows.add(data).draw(false);
+						$('#view_group_list').empty();
+						$('#view_group_list').append(response);
 					}
 				}); 	
-			}
-
-			function get_local_fhs(center_id){
-				$.ajax({
-						type : "POST",
-						url : base_url + 'prayerchain/members/get_local_fhs',
-						data : "center_id="+center_id,
-						cache : true,
-						async : true,
-						success : function (response) {
-							$('#local_fh').empty();
-							html = '<option value="">Select</option> <option value="all">All</option>';
-							var data = JSON.parse(response);
-							for (let i = 0; i < data.length; i++) {
-								html += '<option value="'+ data[i].id +'">'+ data[i].localName +'</option>';
-							}
-							$('#local_fh').append(html);
-						}
-					});
 			}
         </script>

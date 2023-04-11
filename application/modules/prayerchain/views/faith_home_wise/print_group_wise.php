@@ -12,21 +12,14 @@
         font-family:Verdana, Geneva, sans-serif; font-size:12px;
     }
     .table>tbody>tr>td,.table>tbody>tr>th { 
-        border-top: none !important; margin: 0px !important; padding: 0px !important;
+        border-top: none !important ;
     }
     a{color:#000;text-decoration:none;}
-
-    @media print {
-      .page-break  { display:block; page-break-before:always; }
-      @page {
-        /* size: A4; */ /* DIN A4 standard, Europe */
-        margin:5mm 0mm 5mm 5mm;
-        }
-    }
-
 </style>
 <body onLoad="self.print()">
     <center>
+    
+
 <section class="invoice" id="group_list">
 <div class="row">
     <div class="col-12 text-center">
@@ -49,15 +42,15 @@
         </table>
     </div>
 
-    <div class="col-6 m-0">
-        <table class="table table-sm p-0">
+    <div class="col-6">
+        <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($left_time as $value) : ?>
                     <?php $members =  members_time_slot($center_id, $group_no, $value->id, $language->id) ?>
                     <tr>
                         <td width="20%"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0 p-0 text-md"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
+                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
                             <?php endforeach; ?>
                         </td>
                     </tr>
@@ -65,15 +58,15 @@
             </tbody>
         </table>
     </div>
-    <div class="col-6 m-0">
-        <table class="table table-sm p-0">
+    <div class="col-6">
+        <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($right_time as $value) : ?>
                     <?php $members =  members_time_slot($center_id, $group_no, $value->id, $language->id); ?>
                     <tr>
                         <td width="20%"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0 p-0 text-md"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
+                                <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> [<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>]</p>
                             <?php endforeach; ?>
                         </td>
                     </tr>
@@ -81,13 +74,13 @@
             </tbody>
         </table>
     </div>
-    <div class="col-12 mt-0 p-0">
+    <div class="col-12">
         <table class="table table-sm">
             <tbody>
                 <tr>
                     <td>
                         <h5 class="text-bold text-center"><?= $terms->title; ?></h5>
-                        <p class="text-sm"><?= $terms->terms; ?></p>
+                        <p class="text-sm text-md"><?= $terms->terms; ?></p>
                     </td>
                 </tr>
             </tbody>
