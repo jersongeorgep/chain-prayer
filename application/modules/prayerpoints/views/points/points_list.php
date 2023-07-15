@@ -260,4 +260,20 @@
 						}
 					});
 			}
+
+			function update_point(feild, id){
+				var prayer_point = $('#prayer_point_'+id).val()
+				$.ajax({
+					type: "POST",
+					url: "<?= site_url('Prayerpoints/update_line_item'); ?>",
+					data: {'id':id,'feild':feild,'prayer_point':prayer_point },
+					cache: false,
+					async: false,
+					success: function (response) {
+						var data = JSON.parse(response);
+						toastr.success(data.msg);
+					}
+				});
+			}
+			
         </script>

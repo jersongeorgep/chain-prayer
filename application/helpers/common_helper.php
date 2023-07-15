@@ -518,8 +518,7 @@ function get_groups(){
 }
 
 function get_groups_vacant($group_code, $center_id){
-    $CI =& get_instance();
-    $data = [];
+   $data = [];
     
     if($group_code == 'OTH'){
         $x = 0;

@@ -31,8 +31,8 @@ class Prayerpoints extends Admin_Controller {
 			$pData[$key]['sl_no'] 		= $slNo;
 			$pData[$key]['select']		= '<input type="checkbox" name="ids[]" id="ids_'.$rowId.'" value="'. $value->id.'">';
 			$pData[$key]['title']		= $value->title;
-			$pData[$key]['points']		= $value->$field;
-			$pData[$key]['action']		= '<a href="'. site_url('prayerpoints/edit/' . $value->id) .'" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a>'; 
+			$pData[$key]['points']		= '<textarea class="form-control" name="prayer_point_' . $value->id.'" id="prayer_point_' . $value->id.'" >'.$value->$field.'</textarea>';
+			$pData[$key]['action']		= '<a href="'. site_url('prayerpoints/edit/' . $value->id) .'" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a>&nbsp;<button type="button" onclick="update_point(`'.$field.'`,`'.$value->id.'`)" class="btn btn-xs btn-info"><i class="fa fa-save"></i></button>'; 
 			$slNo++;
 			$rowId++;
 		}
@@ -128,8 +128,18 @@ class Prayerpoints extends Admin_Controller {
 			$this->Prayer_point_m->update($id, $data);
 			$this->session->set_flashdata("success", "Data saved successfully");
 			redirect('prayerpoints');
+		}
 	}
-}
+
+	public function update_line_item(){
+		$values = $this->input->post();
+		$id = $values['id'];	
+		$data[$values['feild']] = $values['prayer_point'];
+		$this->db->where('id', $id)->update('prayer_points', $data);
+		$res = array('code'=>200, 'msg'=> 'Prayer point updated');
+		echo json_encode($res);
+	}
+
 
 	public function delete(){
 		$ids = $this->input->post('ids');
