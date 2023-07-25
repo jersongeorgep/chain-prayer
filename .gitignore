@@ -1,2 +1,2 @@
 .htaccess
-application/config/database.php
+error_log
