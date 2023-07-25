@@ -73,12 +73,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
-	/* $db['default'] = array(
+	$db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'jeah_prayer_chain',
+	'database' => 'chainprayer',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -93,9 +93,9 @@ $query_builder = TRUE;
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE,
-	'port' => 3308
-); */
-$db['default'] = array(
+	'port' => 3306
+);
+/* $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'u825632864_tech_jeah',
@@ -115,4 +115,4 @@ $db['default'] = array(
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE
-);
+); */
