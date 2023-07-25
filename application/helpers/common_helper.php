@@ -518,7 +518,8 @@ function get_groups(){
 }
 
 function get_groups_vacant($group_code, $center_id){
-   $data = [];
+    $CI =& get_instance();
+    $data = [];
     
     if($group_code == 'OTH'){
         $x = 0;
@@ -527,7 +528,7 @@ function get_groups_vacant($group_code, $center_id){
         for($i =0; $i < $get_highest_group->group_num; $i++){
             $group_no = $group_code."-".($i+1);
             for($l=0; $l < count($time_details); $l++){
-                $countMemberInTime = $CI->db->select('m.group_no, pt.prayer_time')->from('members as m')->join('prayer_time as pt', 'pt.id =  .m.time_id', 'left')->where('m.group_no', $group_no)->where('m.time_id', $time_details[$l]->id)->get()->result();
+                $countMemberInTime = $CI->db->select('m.group_no, pt.prayer_time')->from('members as m')->join('prayer_time as pt', 'pt.id = m.time_id', 'left')->where('m.group_no', $group_no)->where('m.time_id', $time_details[$l]->id)->get()->result();
                 if(count($countMemberInTime) < $time_details[$l]->allowed_member){
                    $data[$x]['group_no']        = (!empty($countMemberInTime[0]->group_no))? $countMemberInTime[0]->group_no : $group_no;
                    $data[$x]['time']            = (!empty($countMemberInTime[0]->prayer_time))? $countMemberInTime[0]->prayer_time : $time_details[$l]->prayer_time;
@@ -545,7 +546,7 @@ function get_groups_vacant($group_code, $center_id){
         for($i =0; $i < $get_highest_group->group_num; $i++){
             $group_no = $group_code."-".($i+1);
             for($j=0; $j < count($time_details); $j++){
-                $countMemberInTime = $CI->db->select('m.group_no, pt.prayer_time')->from('members as m')->join('prayer_time as pt', 'pt.id =  .m.time_id', 'left')->where('m.center_id', $center_id)->where('m.group_no', $group_no)->where('m.time_id', $time_details[$j]->time_id)->get()->result();
+                $countMemberInTime = $CI->db->select('m.group_no, pt.prayer_time')->from('members as m')->join('prayer_time as pt', 'pt.id =  m.time_id', 'left')->where('m.center_id', $center_id)->where('m.group_no', $group_no)->where('m.time_id', $time_details[$j]->time_id)->get()->result();
                 if(count($countMemberInTime) < $time_details[$j]->allowed_member){
                    $data[$k]['group_no']        = (!empty($countMemberInTime[0]->group_no))? $countMemberInTime[0]->group_no : $group_no;
                    $data[$k]['time']            = (!empty($countMemberInTime[0]->prayer_time))? $countMemberInTime[0]->prayer_time : $time_details[$j]->prayer_time;;

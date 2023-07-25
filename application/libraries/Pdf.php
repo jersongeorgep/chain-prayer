@@ -6,7 +6,7 @@ class Pdf extends TCPDF
     {
         parent::__construct();
     }
-public function Header() {
+ 	/* public function Header() {
 	 	$CI =& get_instance();
 	 	$data = $CI->Librarydetails_m->get(1);
 	 	$this->SetAutoPageBreak(true);
@@ -19,11 +19,11 @@ public function Header() {
     	$html = $CI->load->view('Print_header',$data, true);
 		$this->writeHTML($html, true, false, true, false, '');
 	 	$this->SetTopMargin(30);
-     }
+     } */
     
    
     // Page footer
-    public function Footer() {
+    /* public function Footer() {
 		$CI =& get_instance();
 		$data = $CI->Librarydetails_m->get(1);
         $this->SetY(-15);
@@ -32,5 +32,5 @@ public function Header() {
         $html = $CI->load->view('Print_footer',$data, true);
 		$this->writeHTML($html, true, false, true, false, '');
 		$this->Ln(5);
-	}
+	}  */
 }
