@@ -468,30 +468,7 @@ function get_name_on_lang($id){
     return $member->$select;
 }
 
-function sendMail($to, $sub, $massage, $cc=NULL, $bcc = NULL){
-    //sendgrid key
-    //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
-    $CI =& get_instance();
-    require_once APPPATH."third_party/sendgrid/sendgrid-php.php";
 
-    $email = new \SendGrid\Mail\Mail();
-
-    $email->setFrom('chainprayertpm@gmail.com', 'Chain Payer');
-    $email->setSubject($sub);
-    $email->addTo($to);
-    $email->addContent("text/html", $massage);
-    $sendgrid = new \SendGrid('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');
-    try {
-        $response = $sendgrid->send($email);
-        // print $response->statusCode() . "\n";
-        // print_r($response->headers());
-        // print $response->body() . "\n";
-        return true;
-    } catch (Exception $e) {
-        // echo 'Caught exception: '. $e->getMessage() ."\n";
-        return false;
-    }
-}
 
 function update_time_division($center_id, $left_linit, $right_limit){
     $CI =& get_instance();
