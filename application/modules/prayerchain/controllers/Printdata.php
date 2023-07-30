@@ -155,6 +155,7 @@ class Printdata extends Admin_Controller {
 		$this->data['viewMembers'] = $this->db->get()->result();
 		//times divisions 
 		$times_limit = $this->db->select('*')->from('print_time_divisions')->where('center_id', $values['center_id'])->get()->row();
+		print_r($times_limit->left_limit);
 		$limitLeft = (($times_limit->left_limit) ? $times_limit->left_limit : 17) ;
 		$limitRight = (($times_limit->right_limit) ? $times_limit->right_limit : 13);
 
