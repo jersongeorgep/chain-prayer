@@ -55,6 +55,7 @@
         <ul class="card-tools nav nav-tabs card-header-tabs">
           <?php 
             $groups = get_groups();
+            //print_r($groups);
             $b = 0;
             foreach($groups as $group):
           ?>
