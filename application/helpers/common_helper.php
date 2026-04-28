@@ -1,4 +1,12 @@
 <?php 
+//=========================
+function isLogedUser(){
+	$CI =& get_instance();
+	if($CI->session->userdata('loggedin')== FALSE){
+		redirect('login/login/logout');
+	}
+}
+
 //========== get single Data ============
 function getsingledata($model, $feild, $id){
 	$CI =& get_instance();
@@ -310,39 +318,121 @@ function code_generate($str){
     return strtoupper($a.$b.$c.$d);
 }
 
+
 function get_group_number($centerId, $timeId){
     $CI =& get_instance();
-    $settings = $CI->db->select('*')->from('settings')->where('id', 1)->get()->row();
-    $center_fh = $CI ->Centerfhs_m->get($centerId);
-    $time_details  = $CI ->Times_m->get($timeId);
-    $selecedCenters = explode(',', $settings->group_center);
-    $get_last_group = $CI->db->select('*')->from('members')->where('center_id', $centerId)->where('time_id',$timeId)->order_by('id', 'desc')->get()->row();
+    // Get selected center data from setting table
+    $settings   = $CI->db->select('*')->from('settings')->where('id', 1)->get()->row();
+    $selected_centers = explode(",", $settings->group_center);
 
-    if(!empty($get_last_group)){
-        $currentGroup = $get_last_group->group_no;
-        $code = explode("-", $currentGroup);
-        for($i = 0; $i < ((int)$code[1]); $i++){
-            $previous_groups = $code[0]. '-'. ($i + 1) ; 
-            $check_vacant = $CI->db->select('COUNT(group_no) as groupMembers')->from('members')->where('group_no', $previous_groups)->where('time_id', $timeId)->where('center_id', $centerId)->order_by("id", "asc")->group_by('group_no')->get()->row();
-            $vacant = (isset($check_vacant->groupMembers))?$check_vacant->groupMembers : 0;
-            if( $vacant < $time_details ->allowed_member){
-                $group_code = $code[0].'-'.  ($i + 1);
-                return  $group_code;
-                exit(); 
+    // Default time data from prayer time table
+    $default_time_data = $CI->db->select('*')->from('prayer_time')->where('id',$timeId)->get()->row();
+    
+    //get center details
+    $center_fh = $CI->Centerfhs_m->get($centerId);
+
+    //get time details
+    $time_details  = $CI ->Times_m->get($timeId);
+
+    //checking the center is selected group
+    if(in_array($centerId, $selected_centers)){
+        //get last group number data in member table
+        $get_last_group_number_data = $CI->db->select('*')->from('members')->where('center_id',$centerId)->where('time_id',$timeId)->order_by('group_num', 'desc')->get()->row();
+        //get maximum allowed member in the center separated timing.
+        //if not get from default timing members from prayer timing page.
+        $check_time_members = $CI->db->select('*')->from('centers_timing')->where('center_id', $centerId)->where('time_id',$timeId)->get()->row();
+        if(!empty($check_time_members)){
+            $max_allowed_person = $check_time_members->allowed_member;
+            //checking group number is null or not
+            if(!empty($get_last_group_number_data->group_num) && !empty($get_last_group_number_data->group_code)){
+                // checking any vacant groups are available or not
+                for($i=0; $i < $get_last_group_number_data->group_num; $i++){
+                    $check_vacant = $CI->db->select('COUNT(group_num) as groupMembers')->from('members')->where('group_num', ($i + 1))->where('group_code', $get_last_group_number_data->group_code)->where('time_id', $timeId)->where('center_id', $centerId)->order_by("group_num", "desc")->group_by('group_num')->get()->row();
+                    if ($check_vacant->groupMembers < $max_allowed_person){
+                        $generated_group_no = $get_last_group_number_data->group_num;
+                        $generated_group_code = $center_fh->center_code;
+                        $generated_code = $generated_group_code . "-" . $generated_group_no;
+                        return $generated_code; 
+                        exit();
+                    }
+                }
+                $generated_group_no = $get_last_group_number_data->group_num + 1;
+                $generated_group_code = $center_fh->center_code;
+                $generated_code = $generated_group_code . "-" . $generated_group_no;
+                return $generated_code;
+                exit();
+            }else{
+                $generated_group_no = 1;
+                $generated_group_code = $center_fh->center_code;
+                $generated_code = $generated_group_code . "-" . $generated_group_no;
+                return $generated_code;
+                exit();
+            }
+        }else{
+            $max_allowed_person = $default_time_data->allowed_member;
+
+            //checking group number is null or not
+            if(!empty($get_last_group_number_data->group_num) && !empty($get_last_group_number_data->group_code)){
+                // checking any vacant groups are available or not
+                for($i=0; $i < $get_last_group_number_data->group_num; $i++){
+                    $check_vacant = $CI->db->select('COUNT(group_num) as groupMembers')->from('members')->where('group_num', $i+1)->where('group_code', $get_last_group_number_data->group_code)->where('time_id', $timeId)->where('center_id', $centerId)->order_by("id", "asc")->group_by('group_num')->get()->row();
+                    if($check_vacant->groupMembers < $max_allowed_person){
+                        $generated_group_no = $get_last_group_number_data->group_num;
+                        $generated_group_code = $center_fh->center_code;
+                        $generated_code = $generated_group_code . "-" . $generated_group_no;
+                        return $generated_code;
+                        exit();
+                    }
+                }
+
+                $generated_group_no = $get_last_group_number_data->group_num + 1;
+                $generated_group_code = $center_fh->center_code;
+                $generated_code = $generated_group_code . "-" . $generated_group_no;
+                return $generated_code;
+                exit();
+                
+            }else{
+                $generated_group_no = 1;
+                $generated_group_code = $center_fh->center_code;
+                $generated_code = $generated_group_code . "-" . $generated_group_no;
+                return $generated_code;
+                exit();
             }
         }
-        $group_code = $code[0].'-'. (((int) $code[1]) + 1);
-        return  $group_code; 
-        exit();
     }else{
-        if(in_array($centerId, $selecedCenters)){
-            $group_code = $center_fh->center_code. "-". 1;
+        //get last group number data in member table
+        $get_last_group_number_data = $CI->db->select('*')->from('members')->where('time_id',$timeId)->where('group_code','OTH')->order_by('group_num', 'desc')->get()->row();
+
+        $max_allowed_person = $default_time_data->allowed_member;
+        
+        //checking group number is null or not
+        if(!empty($get_last_group_number_data->group_num) && !empty($get_last_group_number_data->group_code)){
+            // checking any vacant groups are available or not
+            for($i=0; $i < $get_last_group_number_data->group_num; $i++){
+                $check_vacant = $CI->db->select('COUNT(group_num) as groupMembers')->from('members')->where('group_num', $i+1)->where('group_code', $get_last_group_number_data->group_code)->where('time_id', $timeId)->order_by("id", "asc")->group_by('group_num')->get()->row();
+                if($check_vacant->groupMembers < $max_allowed_person){
+                    $generated_group_no = $get_last_group_number_data->group_num;
+                    $generated_group_code = 'OTH';
+                    $generated_code = $generated_group_code . "-" . $generated_group_no;
+                    return $generated_code;
+                    exit();
+                }
+            }
+            $generated_group_no = $get_last_group_number_data->group_num + 1;
+            $generated_group_code = 'OTH';
+            $generated_code = $generated_group_code . "-" . $generated_group_no;
+            return $generated_code;
+            exit();
         }else{
-            $group_code = "OTH-". 1;
+            $generated_group_no = 1;
+            $generated_group_code = 'OTH';
+            $generated_code = $generated_group_code . "-" . $generated_group_no;
+            return $generated_code;
+            exit();
         }
     }
-    return  $group_code; 
 }
+
 
 function formate_time($timeVal){
     $timeValue = explode( "-", $timeVal);
@@ -352,7 +442,7 @@ function formate_time($timeVal){
     return $setValue;
 }
 
-function members_time_slot($center_id, $group_id, $time_id, $lang_id){
+function members_time_slot($group_id, $time_id, $lang_id){
     $CI =& get_instance();
     $lang = $CI->Languages_m->get($lang_id);
     if($lang){
@@ -361,7 +451,7 @@ function members_time_slot($center_id, $group_id, $time_id, $lang_id){
 
     $data = $CI->db->select('m.*,'.$select.',lf.localName, lf.code')->from('members as m')
         ->join('local_fhs as lf', 'lf.id = m.local_id', 'left')
-        ->where('m.center_id', $center_id)
+       // ->where('m.center_id', $center_id)
         ->where('m.group_no', $group_id)
         ->where('m.time_id', $time_id)
         ->get()->result();
@@ -377,3 +467,98 @@ function get_name_on_lang($id){
     }
     return $member->$select;
 }
+
+function sendMail($to, $sub, $massage, $cc=NULL, $bcc = NULL){
+    //sendgrid key
+    //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
+    $CI =& get_instance();
+    require_once APPPATH."third_party/sendgrid/sendgrid-php.php";
+
+    $email = new \SendGrid\Mail\Mail();
+
+    $email->setFrom('chainprayertpm@gmail.com', 'Chain Payer');
+    $email->setSubject($sub);
+    $email->addTo($to);
+    $email->addContent("text/html", $massage);
+    $sendgrid = new \SendGrid('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');
+    try {
+        $response = $sendgrid->send($email);
+        // print $response->statusCode() . "\n";
+        // print_r($response->headers());
+        // print $response->body() . "\n";
+        return true;
+    } catch (Exception $e) {
+        // echo 'Caught exception: '. $e->getMessage() ."\n";
+        return false;
+    }
+}
+
+function update_time_division($center_id, $left_linit, $right_limit){
+    $CI =& get_instance();
+    $check_time_limit = $CI->db->select('*')->from('print_time_divisions')->where('center_id',$center_id)->get()->row();
+    if(!empty($check_time_limit)){
+        $id = $check_time_limit ->id;
+        $data['center_id']    = $center_id;
+        $data['left_limit']   = $left_linit;
+        $data['right_limit']  = $right_limit;
+        $CI->db->where('id', $id)->update('print_time_divisions', $data);
+    }else{
+        $data['center_id']    = $center_id;
+        $data['left_limit']   = $left_linit;
+        $data['right_limit']  = $right_limit;
+        $CI->db->insert('print_time_divisions', $data);
+    }
+    return true;
+}
+
+function get_groups(){
+    $CI =& get_instance();
+    $groups = $CI->db->select('group_code, center_id')->from('members')->group_by('group_code')->get()->result();
+    return $groups;
+}
+
+function get_groups_vacant($group_code, $center_id){
+    $CI =& get_instance();
+    $data = [];
+    
+    if($group_code == 'OTH'){
+        $x = 0;
+        $get_highest_group = $CI->db->select('group_num')->from('members')->where('group_code', $group_code)->order_by('group_num', 'desc')->get()->row();
+        $time_details = $CI->db->select('*')->from('prayer_time')->get()->result();
+        for($i =0; $i < $get_highest_group->group_num; $i++){
+            $group_no = $group_code."-".($i+1);
+            for($l=0; $l < count($time_details); $l++){
+                $countMemberInTime = $CI->db->select('m.group_no, pt.prayer_time')->from('members as m')->join('prayer_time as pt', 'pt.id = m.time_id', 'left')->where('m.group_no', $group_no)->where('m.time_id', $time_details[$l]->id)->get()->result();
+                if(count($countMemberInTime) < $time_details[$l]->allowed_member){
+                   $data[$x]['group_no']        = (!empty($countMemberInTime[0]->group_no))? $countMemberInTime[0]->group_no : $group_no;
+                   $data[$x]['time']            = (!empty($countMemberInTime[0]->prayer_time))? $countMemberInTime[0]->prayer_time : $time_details[$l]->prayer_time;
+                   $data[$x]['max_members']     = $time_details[$l]->allowed_member;
+                   $data[$x]['no_members']      = count($countMemberInTime);
+                   $data[$x]['no_vacant']       = (($time_details[$l]->allowed_member) - (count($countMemberInTime)));
+                   $x++;
+                }
+            }
+        }
+    }else{
+        $k = 0;
+        $get_highest_group = $CI->db->select('group_num')->from('members')->where('group_code', $group_code)->where('center_id', $center_id)->order_by('group_num', 'desc')->get()->row();
+        $time_details = $CI->db->select('ct.*, pt.prayer_time')->from('centers_timing as ct')->join('prayer_time as pt', 'pt.id = ct.time_id', 'left')->where('ct.center_id', $center_id)->get()->result();
+        for($i =0; $i < $get_highest_group->group_num; $i++){
+            $group_no = $group_code."-".($i+1);
+            for($j=0; $j < count($time_details); $j++){
+                $countMemberInTime = $CI->db->select('m.group_no, pt.prayer_time')->from('members as m')->join('prayer_time as pt', 'pt.id = m.time_id', 'left')->where('m.center_id', $center_id)->where('m.group_no', $group_no)->where('m.time_id', $time_details[$j]->time_id)->get()->result();
+                if(count($countMemberInTime) < $time_details[$j]->allowed_member){
+                   $data[$k]['group_no']        = (!empty($countMemberInTime[0]->group_no))? $countMemberInTime[0]->group_no : $group_no;
+                   $data[$k]['time']            = (!empty($countMemberInTime[0]->prayer_time))? $countMemberInTime[0]->prayer_time : $time_details[$j]->prayer_time;;
+                   $data[$k]['max_members']      = $time_details[$j]->allowed_member;
+                   $data[$k]['no_members']      = count($countMemberInTime);
+                   $data[$k]['no_vacant']       = (($time_details[$j]->allowed_member) - (count($countMemberInTime)));
+                   $k++;
+                }
+            }
+        }
+    }
+    
+   return $data;
+}
+

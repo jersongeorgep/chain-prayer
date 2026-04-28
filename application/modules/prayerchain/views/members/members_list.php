@@ -18,7 +18,7 @@
         						<div class="col-sm-12">
         							<form  method="POST" id="quickForm" class="row" enctype="multipart/form-data">
         								<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="center_id">Center<sup class="text-danger">*</sup></label>
+        									<label for="center_id">Center</label>
         									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
         										<option value="">Select</option>
 												<option value="all">ALL</option>
@@ -30,7 +30,7 @@
         									</select>
         								</div>
 										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="local_fh">Local<sup class="text-danger">*</sup></label>
+        									<label for="local_fh">Local</label>
         									<select class="form-control form-control-sm select2" name="local_fh" id="local_fh">
         										<option value="">Select</option>
         										<option value="all">All</option>
@@ -38,15 +38,14 @@
         									</select>
         								</div>
 										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="group_no">Groups<sup class="text-danger">*</sup></label>
+        									<label for="group_no">Groups</label>
         									<select class="form-control form-control-sm select2" name="group_no" id="group_no">
         										<option value="">Select</option>
         										<option value="all">All</option>
-        										
         									</select>
         								</div>
 										<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="time_id">Time<sup class="text-danger">*</sup></label>
+        									<label for="time_id">Time</label>
         									<select class="form-control form-control-sm select2" name="time_id" id="time_id">
         										<option value="">Select</option>
 												<option value="all">All</option>
@@ -57,7 +56,11 @@
         										<?php endif; ?>
         									</select>
         								</div>
-        								<div class="form-group col-sm-12 col-md-3 col-lg-3 pt-2">
+										<div class="form-group col-sm-12 col-md-3 col-lg-3">
+        									<label for="group_no">Key word<sup class="text-danger">*</sup></label>
+        									<input type="text" class="form-control form-control-sm" name="keyword" id="keyword" value="" placeholder="Name / Mobile ">
+        								</div>
+        								<div class="form-group col-sm-12 col-md-3 col-lg-3 mt-4 pt-2">
         									<button type="submit" class="btn btn-sm btn-success" id="btn_search"><i class="fa fa-search"></i> Find</button>
 											<a id="print_btn" class="btn btn-sm btn-primary disabled" target="_blank" ><i class="fa fa-print"></i> Print</a>
         								</div>
@@ -146,7 +149,7 @@
 				$('.select2').select2();
 
         		table = $("#example1").DataTable({
-					//"dom": 'Blfrtip',
+					"dom": 'Blfrtip',
         			"responsive": true,
         			"lengthChange": false,
         			"autoWidth": false,
@@ -166,7 +169,7 @@
         				'targets': [1], // column index (start from 0)
         				'orderable': false, // set orderable false for selected columns
         			}],
-        			/* "buttons": [{extend: "excel",
+        			 "buttons": [{extend: "excel",
 						exportOptions: {
 							columns: [ 0, 2, 3, 4, 5, 6, 7, 8 ] 
 						},
@@ -178,7 +181,7 @@
 						exportOptions: {
 							columns: [ 0, 2, 3, 4, 5, 6, 7, 8 ] 
 						},	
-					}] */
+					}] 
         		});
 
         		$("#select_all").click(function() {
@@ -186,34 +189,6 @@
         		});
 
 				$('#quickForm').validate({
-                    rules: {
-                        center_id: {
-                            required: true
-                        },
-                        local_fh: {
-                            required: true
-                        },
-                        group_no: {
-                            required: true
-                        },
-                        time_id: {
-                            required: true
-                        }
-                    },
-                    messages: {
-                        center_id: {
-                            required: "Please choose  Center",
-                        },
-                        local_fh: {
-                            required: "Please choose  Local",
-                        },
-                        group_no: {
-                            required: "Please choose  Group",
-                        },
-                        time_id: {
-                            required: "Please choose  Time",
-                        }
-                    },
                     errorElement: 'span',
                     errorPlacement: function(error, element) {
                         error.addClass('invalid-feedback');

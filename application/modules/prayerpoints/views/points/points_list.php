@@ -18,14 +18,26 @@
         						<div class="col-sm-12">
         							<form  method="POST" id="quickForm" class="row" enctype="multipart/form-data">
         								<div class="form-group col-sm-12 col-md-3 col-lg-3">
-        									<label for="center_id">Serial No<sup class="text-danger">*</sup></label>
-        									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
+        									<label for="serial_no">Serial No<sup class="text-danger">*</sup></label>
+        									<select class="form-control form-control-sm select2" name="serial_no" id="serial_no">
         										<option value="">Select</option>
 												<?php if ($serial_nos) : ?>
         											<?php foreach ($serial_nos as $value) : ?>
         												<option value="<?= $value->id; ?>"><?= $value->serial_no; ?></option>
         											<?php endforeach; ?>
         										<?php endif; ?>
+        									</select>
+        								</div>
+										<div class="form-group col-sm-12 col-md-3 col-lg-3">
+        									<label for="lang">Language<sup class="text-danger">*</sup></label>
+        									<select class="form-control form-control-sm select2" name="lang" id="lang">
+        										<option value="">Select</option>
+												<option value="eng">English</option>
+												<option value="mal">Malayalam</option>
+												<option value="tam">Tamil</option>
+												<option value="tel">Telugu</option>
+												<option value="hin">Hindi</option>
+												<option value="kan">Kanada</option>
         									</select>
         								</div>
 										<div class="form-group col-sm-12 col-md-3 col-lg-3 pt-2 mt-4">
@@ -51,7 +63,7 @@
         		<div class="card">
         			<div class="card-header">
         				<h3 class="card-title">
-        					<span><a href="<?= site_url('prayerpoints/Prayerpoints/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
+        					<span><a href="<?= site_url('prayerpoints/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
         					<span><button type="button" id="delete_btn" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button></span>
         				</h3>
         			</div>
@@ -65,13 +77,8 @@
         									<tr>
         										<th class="text-center" width="7%">Sl. No</th>
         										<th class="text-center" width="2%"> <input type="checkbox" name="select_all" id="select_all" /> </th>
-        										<th class="text-center">Name </th>
-												<th width="15%" class="text-center">Mobile</th>
-        										<th width="10%" class="text-center">Time</th>
-        										<th width="10%" class="text-center">Local</th>
-        										<th width="10%" class="text-center">Center</th>
-												<th width="10%" class="text-center">Language</th>
-												<th width="10%" class="text-center">Group</th>
+												<th width="15%" class="text-center">Title</th>
+        										<th class="text-center">Point</th>
         										<th class="text-center" width="8%">Action</th>
         									</tr>
         								</thead>
@@ -123,13 +130,8 @@
 					"columns": [
 						{ "data": "sl_no" },
 						{ "data": "select" },
-						{ "data": "name" },
-						{ "data": "mobile" },
-						{ "data": "time" },
-						{ "data": "local" },
-						{ "data": "center" },
-						{ "data": "language" },
-						{ "data": "group_no" },
+						{ "data": "title" },
+						{ "data": "points" },
 						{ "data": "action" }
 					],
         			'columnDefs': [{
@@ -157,31 +159,19 @@
 
 				$('#quickForm').validate({
                     rules: {
-                        center_id: {
+                        serial_no: {
                             required: true
                         },
-                        local_fh: {
-                            required: true
-                        },
-                        group_no: {
-                            required: true
-                        },
-                        time_id: {
+                        lang: {
                             required: true
                         }
                     },
                     messages: {
-                        center_id: {
-                            required: "Please choose  Center",
+                        serial_no: {
+                            required: "Please choose  serial No",
                         },
-                        local_fh: {
-                            required: "Please choose  Local",
-                        },
-                        group_no: {
-                            required: "Please choose  Group",
-                        },
-                        time_id: {
-                            required: "Please choose  Time",
+						lang: {
+                            required: "Please choose Language"
                         }
                     },
                     errorElement: 'span',
@@ -196,42 +186,11 @@
                         $(element).removeClass('is-invalid');
                     },
 					submitHandler:function(){
-						get_members_data();
+						get_serial_data();
 					}
                 });
 
-				$("#center_id"). on('change', function(){
-					var center_id = this.value;
-					get_local_fhs(center_id);
-					$.ajax({
-						type : "POST",
-						url : base_url + 'prayerchain/members/get_groups_in_center',
-						data : "center_id="+center_id,
-						cache : true,
-						async : true,
-						success : function (response) {
-							$('#group_no').empty();
-							html = '<option value="">Select</option> <option value="all">All</option>';
-							var data = JSON.parse(response);
-							for (let i = 0; i < data.length; i++) {
-								html += '<option value="'+ data[i].group_no +'">'+ data[i].group_no +'</option>';
-							}
-							$('#group_no').append(html);
-						}
-					});
-					
-				})
-
-				$('#time_id').on('change', function(){
-					var centerId = $('#center_id').val();
-					var localId = $('#local_fh').val();
-					var groupNo = $('#group_no').val();
-					var timeId = this.value;
-					$('#print_btn').removeClass('disabled').prop("href", base_url + "prayerchain/members/print-member-data/"+centerId+"/"+localId+"/"+groupNo+"/"+timeId);
-					
-				})
-
-        		$('#delete_btn').on('click', function() {
+				$('#delete_btn').on('click', function() {
         			var post_arr = [];
         			$('#show_data input[type=checkbox]').each(function() {
         				if (jQuery(this).is(":checked")) {
@@ -243,7 +202,7 @@
         				if (confirm("Do you really want to delete records?")) {
         					$.ajax({
         						type: "POST",
-        						url: base_url + "prayerchain/members/delete",
+        						url: base_url + "prayerpoints/delete",
         						async: false,
         						cache: false,
         						data: {
@@ -267,11 +226,11 @@
 
         	});
 
-			function get_members_data(){
+			function get_serial_data(){
 				var form_data = $('#quickForm').serializeArray();
 				 $.ajax({
 					type : "POST",
-					url : base_url + 'prayerchain/members/get_members_data',
+					url : base_url + 'prayerpoints/get_serial_data',
 					data : form_data,
 					cache : false,
 					async : false,

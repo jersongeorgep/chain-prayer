@@ -24,9 +24,9 @@
         <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($left_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $language->id) ?>
+                    <?php $members =  members_time_slot( $group_no, $value->id, $language->id) ?>
                     <tr>
-                        <td width="20%"><?= $value->prayer_time; ?> </td>
+                        <td width="20%" class="text-bold"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
                                 <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
                             <?php endforeach; ?>
@@ -40,9 +40,9 @@
         <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($right_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $language->id); ?>
+                    <?php $members =  members_time_slot($group_no, $value->id, $language->id); ?>
                     <tr>
-                        <td width="20%"><?= $value->prayer_time; ?> </td>
+                        <td width="20%" class="text-bold"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
                                 <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
                             <?php endforeach; ?>

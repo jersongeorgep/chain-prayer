@@ -5,10 +5,10 @@ class Members extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Chain Prayer';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index(){
-		$this->data['page_title'] = 'Members List';
+		$this->data['page_title'] = 'Members Register';
 		//$this->data['centerfhs'] = $this->Centerfhs_m->order_by('id', 'desc')->get_all();
 		$this->data['center_fh'] = $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
 		$this->data['times'] = $this->Times_m->get_all();
@@ -17,30 +17,47 @@ class Members extends Admin_Controller {
 	}
 	public function get_groups_in_center(){
 		$val = $this->input->post(NULL, true);
-		$data = $this->db->select('group_no')->from('members')->where('center_id', $val['center_id'])->order_by('group_no', 'asc')->group_by('group_no')->get()->result();
+		if($val['center_id'] == 'all'){
+			$data = $this->db->select('group_no, group_num')->from('members')->where('group_code', 'OTH')->order_by('group_num', 'asc')->group_by('group_no')->get()->result();
+		}else{
+			$data = $this->db->select('group_no, group_num')->from('members')->where('center_id', $val['center_id'])->order_by('group_num', 'asc')->group_by('group_no')->get()->result();
+		}
 		echo json_encode($data);
 	}
 	public function get_members_data(){
 		$values = $this->input->post(NULL, true);
+
 		$this->db->select('m.*, cf.centerName, lf.localName, pt.prayer_time,l.language')->from('members as m')
 			->join('center_fhs as cf', 'cf.id = m.center_id', 'left')
 			->join('local_fhs as lf', 'lf.id = m.local_id', 'left')
 			->join('prayer_time as pt', 'pt.id = m.time_id', 'left')
 			->join('languages as l', 'l.id = m.lang_id', 'left');
-			if($values['center_id'] != 'all'){
+
+			if(!empty($values['center_id']) && $values['center_id'] != 'all'){
 				$this->db->where('m.center_id', $values['center_id']);
 			}
-			if($values['local_fh'] != 'all'){
+
+			if($values['center_id'] == 'all'){
+				$this->db->where('m.group_code', 'OTH');
+			}
+
+			if(!empty($values['local_fh']) && $values['local_fh'] != 'all'){
 				$this->db->where('m.local_id', $values['local_fh']);
 			}
-			if($values['time_id'] != 'all'){
+			if(!empty($values['time_id']) && $values['time_id'] != 'all'){
 				$this->db->where('m.time_id', $values['time_id']);
 			}
-			if($values['group_no'] != 'all'){
+			if(!empty($values['group_no']) && $values['group_no'] != 'all'){
 				$this->db->where('m.group_no', $values['group_no']);
 			}
-			$this->db->order_by('m.group_no', 'asc');
+			
+			if(!empty($values['keyword'])){
+				$this->db->like('m.eng_name', $values['keyword']);
+				$this->db->or_like('m.mobile', $values['keyword']);
+			}
+			$this->db->order_by('m.time_id', 'asc');
 		$data =	$this->db->get()->result();
+		$lData = [];
 		$slNo =1 ;
 		$rowId = 0;
 		foreach ($data as $key => $value) {
@@ -127,6 +144,7 @@ class Members extends Admin_Controller {
                 'hin_name',
                 'kan_name',
                 'mobile',
+                'email',
                 'group_no',
 			));
 			$data['status'] = 1;
@@ -170,6 +188,7 @@ class Members extends Admin_Controller {
                 'hin_name',
                 'kan_name',
                 'mobile',
+                'email',
                 'group_no',
 			));
 			$data['status'] = 1;
@@ -206,7 +225,7 @@ class Members extends Admin_Controller {
 				if($groupNo != 'all'){
 					$this->db->where('m.group_no', $groupNo);
 				}
-				$this->db->order_by('m.group_no', 'asc');
+				$this->db->order_by('m.time_id', 'asc');
 				$this->data['members'] = $this->db->get()->result();
 				$this->load->view('members/print_members', $this->data);
 		}

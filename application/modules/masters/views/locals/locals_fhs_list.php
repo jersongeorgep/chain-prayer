@@ -18,7 +18,7 @@
         						<div class="col-sm-12">
         							<form  method="POST" id="quickForm" class="row" enctype="multipart/form-data">
         								<div class="form-group col-4">
-        									<label for="center_id">Center FH <sup class="text-danger">*</sup></label>
+        									<label for="center_id">Center FH</label>
         									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
         										<option value="">Select</option>
         										<?php if ($center_fh) : ?>
@@ -27,6 +27,10 @@
         											<?php endforeach; ?>
         										<?php endif; ?>
         									</select>
+        								</div>
+										<div class="form-group col-4">
+        									<label for="center_id">Keyword</label>
+        									<input type="text" class="form-control form-control-sm" name="keyword" id="keyword">
         								</div>
         								<div class="form-group col-3 pt-2">
         									<button type="submit" class="btn btn-sm btn-success mt-4" id="btn_search"><i class="fa fa-search"></i> Find</button>
@@ -45,7 +49,7 @@
         	<!-- /.col -->
         </div>
 
-        <div class="row">
+        <div class="row" >
         	<div class="col-12">
         		<!-- /.card -->
         		<div class="card">
@@ -72,7 +76,7 @@
         										<th class="text-center" width="8%">Action</th>
         									</tr>
         								</thead>
-        								<tbody>
+        								<tbody id="show_data">
         									
         								</tbody>
         							</table>
@@ -150,16 +154,6 @@
         		});
 
 				$('#quickForm').validate({
-                    rules: {
-                        center_id: {
-                            required: true
-                        }
-                    },
-                    messages: {
-                        center_id: {
-                            required: "Please choose  Center",
-                        }
-                    },
                     errorElement: 'span',
                     errorPlacement: function(error, element) {
                         error.addClass('invalid-feedback');

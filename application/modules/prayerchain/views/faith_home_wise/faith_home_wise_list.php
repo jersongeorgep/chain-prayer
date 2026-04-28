@@ -135,6 +135,45 @@
 					}
                 });
 
+				$('#mailingForm').validate({
+                    rules: {
+                        center_id_mail: {
+                            required: true
+                        },
+                        local_fh_mail: {
+                            required: true
+                        },
+						to_mail_id: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        center_id_mail: {
+                            required: "Please choose  Center",
+                        },
+                        local_fh_mail: {
+                            required: "Please choose  Local faith home",
+                        },
+						to_mail_id: {
+                            required: "Please enter to email",
+                        }
+                    },
+                    errorElement: 'span',
+                    errorPlacement: function(error, element) {
+                        error.addClass('invalid-feedback');
+                        element.closest('.form-group').append(error);
+                    },
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid');
+                    },
+					submitHandler:function(){
+						send_faith_home_wise_mail();
+					}
+                });
+
 				$("#center_id"). on('change', function(){
 					var center_id = this.value;
 					$.ajax({
@@ -151,6 +190,27 @@
 								html += '<option value="'+ data[i].id +'">'+ data[i].localName +'</option>';
 							}
 							$('#local_fh').append(html);
+						}
+					});
+					
+				})
+
+				$("#center_id_mail"). on('change', function(){
+					var center_id = this.value;
+					$.ajax({
+						type : "POST",
+						url : base_url + 'prayerchain/members/get_local_fhs',
+						data : "center_id="+center_id,
+						cache : true,
+						async : true,
+						success : function (response) {
+							$('#local_fh_mail').empty();
+							html = '<option value="">Select</option>';
+							var data = JSON.parse(response);
+							for (let i = 0; i < data.length; i++) {
+								html += '<option value="'+ data[i].id +'">'+ data[i].localName +'</option>';
+							}
+							$('#local_fh_mail').append(html);
 						}
 					});
 					
@@ -197,6 +257,21 @@
 				 $.ajax({
 					type : "POST",
 					url : base_url + 'prayerchain/printdata/get_local_fh_wise_data',
+					data : form_data,
+					cache : false,
+					async : false,
+					success : function(response){
+						$('#view_group_list').empty();
+						$('#view_group_list').append(response);
+					}
+				}); 	
+			}
+
+			function send_faith_home_wise_mail(){
+				var form_data = $('#quickForm').serializeArray();
+				 $.ajax({
+					type : "POST",
+					url : base_url + 'prayerchain/printdata/send_local_fh_wise_data',
 					data : form_data,
 					cache : false,
 					async : false,

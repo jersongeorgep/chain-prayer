@@ -3,7 +3,7 @@
         <link rel="stylesheet" href="<?= site_url('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
         <link rel="stylesheet" href="<?= site_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'); ?>">
 
-        <form id="quickForm" action="<?= site_url('prayerpoints/makeserialnumber/save') ?>" method="POST" enctype="multipart/form-data">
+        <form id="quickForm" action="<?= site_url('prayerpoints/makeSerialNumber/save') ?>" method="POST" enctype="multipart/form-data">
             <div class="card-body row">
                 <div class="form-group col-12">
                     <label for="serial_no">Serial No.</label>

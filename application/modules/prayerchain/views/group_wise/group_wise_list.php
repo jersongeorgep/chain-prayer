@@ -21,8 +21,9 @@
         									<label for="center_id">Center<sup class="text-danger">*</sup></label>
         									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
         										<option value="">Select</option>
+        										<option value="all">All</option>
 												<?php if ($center_fh) : ?>
-        											<?php foreach ($center_fh as $value) : ?>
+													<?php foreach ($center_fh as $value) : ?>
         												<option value="<?= $value->id; ?>"><?= $value->centerName; ?></option>
         											<?php endforeach; ?>
         										<?php endif; ?>

@@ -5,7 +5,7 @@ class MakeSerialNumber extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Chain Point';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index(){
 		$this->data['page_title'] = 'Serial No List';
@@ -46,7 +46,7 @@ class MakeSerialNumber extends Admin_Controller {
 			$data['status'] = 1;
 			$this->Serial_nos_m->insert($data);
 			$this->session->set_flashdata("success", "Data saved successfully");
-			redirect('prayerpoints/makeserialnumber');
+			redirect('prayerpoints/makeSerialNumber');
 		}
 	}
 
@@ -66,7 +66,7 @@ class MakeSerialNumber extends Admin_Controller {
 			$data['status'] = 1;
 			$this->Serial_nos_m->update($id, $data);
 			$this->session->set_flashdata("success", "Data saved successfully");
-			redirect('prayerpoints/makeserialnumber');
+			redirect('prayerpoints/makeSerialNumber');
 	}
 }
 

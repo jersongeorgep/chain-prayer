@@ -19,8 +19,7 @@
         								<div class="form-group col-sm-12 col-md-3">
         									<label for="center_id">Center<sup class="text-danger">*</sup></label>
         									<select class="form-control form-control-sm select2" name="center_id" id="center_id">
-        										<option value="">Select</option>
-												<?php if ($center_fh) : ?>
+        										<?php if ($center_fh) : ?>
         											<?php foreach ($center_fh as $value) : ?>
         												<option value="<?= $value->id; ?>"><?= $value->centerName; ?></option>
         											<?php endforeach; ?>
@@ -38,11 +37,6 @@
         									<label for="members">Members<sup class="text-danger">*</sup></label>
         									<select class="form-control form-control-sm select2" name="members" id="members">
         										<option value="">Select</option>
-        										<?php if ($languages) : ?>
-        											<?php foreach ($languages as $value) : ?>
-        												<option value="<?= $value->id; ?>"><?= $value->language; ?></option>
-        											<?php endforeach; ?>
-        										<?php endif; ?>
         									</select>
         								</div>
 										<div class="form-group col-sm-12 col-md-1 pt-2">

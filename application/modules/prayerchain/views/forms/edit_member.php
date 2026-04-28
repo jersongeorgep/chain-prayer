@@ -92,6 +92,10 @@
                     <label for="mobile">Mobile No.</label>
                     <input type="text" name="mobile" class="form-control form-control-sm" id="mobile" placeholder="Mobile" value="<?= $member->mobile; ?>">
                 </div>
+                <div class="form-group col-sm-12 col-md-12">
+                    <label for="email">E-mail</label>
+                    <input type="email" name="email" class="form-control form-control-sm" id="email" placeholder="E-mail" value="<?= $member->email; ?>">
+                </div>
             </div>
             <!-- /.card-body -->
             <div class="card-footer">

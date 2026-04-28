@@ -71,7 +71,7 @@
                                 foreach ($members as $member) : ?>
                                 <tr>
                                     <td class="text-center"><?= $slNo; ?></td>
-                                    <td><?= $member->bro_sis; ?>. <?= $member->eng_name; ?></td>
+                                    <td><?= $member->bro_sis; ?> <?= $member->eng_name; ?></td>
                                     <td class="text-center"><?= $member->mobile; ?></td>
                                     <td class="text-center"><?= $member->prayer_time; ?></td>
                                     <td><?= $member->localName; ?></td>

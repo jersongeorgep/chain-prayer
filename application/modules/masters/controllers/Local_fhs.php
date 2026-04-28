@@ -5,7 +5,7 @@ class Local_fhs extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Masters';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index(){
 		$this->data['page_title'] = 'All Local FaithHomes';
@@ -16,7 +16,16 @@ class Local_fhs extends Admin_Controller {
 	}
 	public function get_local_fh_data(){
 		$values = $this->input->post(NULL, true);
-		$data = $this->db->select('l.id, l.code, l.localName, c.centerName, c.center_code')->from('local_fhs as l')->join('center_fhs as c', 'c.id = l.center_id', 'left')->where('l.center_id', $values['center_id'])->order_by('l.id', 'desc')->get()->result();
+		$this->db->select('l.id, l.code, l.localName, c.centerName, c.center_code')
+		->from('local_fhs as l')->join('center_fhs as c', 'c.id = l.center_id', 'left');
+		if(!empty($values['center_id'])){
+			$this->db->where('l.center_id', $values['center_id']);
+		}
+		if(!empty($values['keyword'])){
+			$this->db->like('l.localName', $values['keyword']);
+			$this->db->or_like('l.address', $values['keyword']);
+		}
+		$data =$this->db->order_by('l.id', 'desc')->get()->result();
 		$slNo =1 ;
 		foreach ($data as $key => $value) {
 			$lData[$key]['sl_no'] 		= $slNo;

@@ -5,13 +5,11 @@ class Prayerpoints extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Chain Point';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index(){
 		$this->data['page_title'] = 'Prayer Point List';
 		$this->data['serial_nos'] = $this->Serial_nos_m->order_by('id', 'asc')->get_all();
-		$this->data['center_fh'] = $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
-		$this->data['times'] = $this->Times_m->get_all();
 		$this->data['load_page'] = "prayerpoints/points/points_list";
 		$this->template->admintemplate($this->data);
 	}
@@ -20,54 +18,32 @@ class Prayerpoints extends Admin_Controller {
 		$data = $this->db->select('group_no')->from('members')->where('center_id', $val['center_id'])->order_by('group_no', 'asc')->group_by('group_no')->get()->result();
 		echo json_encode($data);
 	}
-	public function get_members_data(){
+	public function get_serial_data(){
 		$values = $this->input->post(NULL, true);
-		$this->db->select('m.*, cf.centerName, lf.localName, pt.prayer_time,l.language')->from('members as m')
-			->join('center_fhs as cf', 'cf.id = m.center_id', 'left')
-			->join('local_fhs as lf', 'lf.id = m.local_id', 'left')
-			->join('prayer_time as pt', 'pt.id = m.time_id', 'left')
-			->join('languages as l', 'l.id = m.lang_id', 'left');
-			if($values['center_id'] != 'all'){
-				$this->db->where('m.center_id', $values['center_id']);
-			}
-			if($values['local_fh'] != 'all'){
-				$this->db->where('m.local_id', $values['local_fh']);
-			}
-			if($values['time_id'] != 'all'){
-				$this->db->where('m.time_id', $values['time_id']);
-			}
-			if($values['group_no'] != 'all'){
-				$this->db->where('m.group_no', $values['group_no']);
-			}
-			$this->db->order_by('m.group_no', 'asc');
+		$field = 'point_' . $values['lang'];
+		$this->db->select('*')->from('prayer_points');
+		$this->db->where('serial_no', $values['serial_no']);
+		$this->db->order_by('id', 'asc');
 		$data =	$this->db->get()->result();
 		$slNo =1 ;
 		$rowId = 0;
 		foreach ($data as $key => $value) {
-			$lData[$key]['sl_no'] 		= $slNo;
-			$lData[$key]['select']		= '<input type="checkbox" name="ids[]" id="ids_'.$rowId.'" value="'. $value->id.'">';
-			$lData[$key]['center']		= $value->centerName;
-			$lData[$key]['local']		= $value->localName;
-			$lData[$key]['time']		= $value->prayer_time;
-			$lData[$key]['name']		= $value->bro_sis.' '.$value->eng_name;
-			$lData[$key]['mobile']		= $value->mobile;
-			$lData[$key]['language']	= $value->language;
-			$lData[$key]['group_no']	= $value->group_no;
-			$lData[$key]['action']		= '<a href="'. site_url('prayerchain/members/edit/' . $value->id) .'" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a>'; 
+			$pData[$key]['sl_no'] 		= $slNo;
+			$pData[$key]['select']		= '<input type="checkbox" name="ids[]" id="ids_'.$rowId.'" value="'. $value->id.'">';
+			$pData[$key]['title']		= $value->title;
+			$pData[$key]['points']		= $value->$field;
+			$pData[$key]['action']		= '<a href="'. site_url('prayerpoints/edit/' . $value->id) .'" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a>'; 
 			$slNo++;
 			$rowId++;
 		}
-		echo json_encode($lData);
+		echo json_encode($pData);
 	}
 
 	public function create_new(){
-		$this->data['page_title']	= 'New Member';
-        $this->data['center_fh'] 	= $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
-        $this->data['times']		= $this->Times_m->get_all();
-		$this->data['language'] 	= $this->Languages_m->get_all();
-		$this->data['brosis']		= enum_select('members', 'bro_sis');
-		$this->data['form']			= 'prayerchain/forms/new_member';
-		$this->data['load_page']	= "prayerchain/members/entry_form";
+		$this->data['page_title']	= 'New Prayer Point';
+        $this->data['serial_nos'] 	= $this->Serial_nos_m->order_by('id', 'asc')->get_all();
+        $this->data['form']			= 'prayerpoints/forms/new_points';
+		$this->data['load_page']	= "prayerpoints/points/entry_form";
 		$this->template->admintemplate($this->data);
 	}
 
@@ -84,131 +60,84 @@ class Prayerpoints extends Admin_Controller {
 	}
 
 	public function edit($id){
-		$this->data['page_title']	= 'Edit Member';
-		$this->data['member'] 		= $this->Members_m->get($id);
-        $this->data['center_fh'] 	= $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
-        $this->data['local_fh'] 	= $this->db->where('center_id', $this->data['member']->center_id)->get('local_fhs')->result();
-		$this->data['times']		= $this->Times_m->get_all();
-		$this->data['language'] 	= $this->Languages_m->get_all();
-		$this->data['brosis']		= enum_select('members', 'bro_sis');
-		$this->data['form']			= 'prayerchain/forms/edit_member';
-		$this->data['load_page']	= "prayerchain/members/entry_form";
+		$this->data['page_title']	= 'Edit Prayer Point';
+        $this->data['serial_nos'] 	= $this->Serial_nos_m->order_by('id', 'asc')->get_all();
+        $this->data['point'] 		= $this->Prayer_point_m->get($id);
+        $this->data['form']			= 'prayerpoints/forms/edit_points';
+		$this->data['load_page']	= "prayerpoints/points/entry_form";
 		$this->template->admintemplate($this->data);
 	}
 
 	public function save(){
-		$this->form_validation->set_rules('center_id', 'Center', 'trim|required');
-		$this->form_validation->set_rules('local_id', 'Local ', 'trim|required|is_unique[local_fhs.code]');
-		$this->form_validation->set_rules('lang_id', 'Language', 'trim|required');
-		$this->form_validation->set_rules('time_id', 'Time', 'trim|required');
-		$this->form_validation->set_rules('bro_sis', 'Bro-Sis', 'trim|required');
-		$this->form_validation->set_rules('eng_name', 'Eng Name', 'trim|required');
-		$this->form_validation->set_rules('group_no', 'Group No', 'trim|required');
+		$this->form_validation->set_rules('serial_no', 'Serial No', 'trim|required');
+		$this->form_validation->set_rules('title', 'Title ', 'trim|required');
+		$this->form_validation->set_rules('point_eng', 'Point English', 'trim|required');
+		$this->form_validation->set_rules('point_mal', 'Point Malayalam', 'trim|required');
+		$this->form_validation->set_rules('point_tam', 'Point Tamil', 'trim|required');
 		if($this->form_validation->run() === false){
-			$this->data['page_title']	= 'New Member';
-			$this->data['center_fh'] 	= $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
-			$this->data['times']		= $this->Times_m->get_all();
-			$this->data['language'] 	= $this->Languages_m->get_all();
-			$this->data['form']			= 'prayerchain/forms/new_member';
-			$this->data['load_page']	= "prayerchain/members/entry_form";
+			$this->data['page_title']	= 'New Prayer Point';
+			$this->data['serial_nos'] 	= $this->Serial_nos_m->order_by('id', 'asc')->get_all();
+			$this->data['form']			= 'prayerpoints/forms/new_points';
+			$this->data['load_page']	= "prayerpoints/points/entry_form";
 			$this->session->set_flashdata("danger", validation_errors());
 			$this->template->admintemplate($this->data);
 		}else{
-			$data = $this->Members_m->array_from_post(array(
-				'center_id',
-				'local_id',
-                'lang_id',
-                'time_id',
-                'bro_sis',
-                'eng_name',
-                'mal_name',
-                'tam_name',
-                'tel_name',
-                'hin_name',
-                'kan_name',
-                'mobile',
-                'group_no',
+			$data = $this->Prayer_point_m->array_from_post(array(
+				'serial_no',
+				'title',
+                'point_eng',
+                'point_mal',
+                'point_tam',
+                'point_tel',
+                'point_hin',
+                'point_kan'
 			));
 			$data['status'] = 1;
-			$this->Members_m->insert($data);
+			$this->Prayer_point_m->insert($data);
 			$this->session->set_flashdata("success", "Data saved successfully");
-			redirect('prayerchain/members');
+			redirect('prayerpoints');
 		}
 	}
 
 	public function update($id){
-		$this->form_validation->set_rules('center_id', 'Center', 'trim|required');
-		$this->form_validation->set_rules('local_id', 'Local ', 'trim|required|is_unique[local_fhs.code]');
-		$this->form_validation->set_rules('lang_id', 'Language', 'trim|required');
-		$this->form_validation->set_rules('time_id', 'Time', 'trim|required');
-		$this->form_validation->set_rules('bro_sis', 'Bro-Sis', 'trim|required');
-		$this->form_validation->set_rules('eng_name', 'Eng Name', 'trim|required');
-		$this->form_validation->set_rules('group_no', 'Group No', 'trim|required');
+		$this->form_validation->set_rules('serial_no', 'Serial No', 'trim|required');
+		$this->form_validation->set_rules('title', 'Title ', 'trim|required');
+		$this->form_validation->set_rules('point_eng', 'Point English', 'trim|required');
+		$this->form_validation->set_rules('point_mal', 'Point Malayalam', 'trim|required');
+		$this->form_validation->set_rules('point_tam', 'Point Tamil', 'trim|required');
 		if($this->form_validation->run() === false){
-			$this->data['page_title']	= 'Edit Member';
-			$this->data['member'] 		= $this->Members_m->get($id);
-			$this->data['center_fh'] 	= $this->Centerfhs_m->order_by('centerName', 'asc')->get_all();
-			$this->data['local_fh'] 	= $this->db->where('center_id', $this->data['member']->center_id)->get('local_fhs')->result();
-			$this->data['times']		= $this->Times_m->get_all();
-			$this->data['language'] 	= $this->Languages_m->get_all();
-			$this->data['brosis']		= enum_select('members', 'bro_sis');
-			$this->data['form']			= 'prayerchain/forms/edit_member';
-			$this->data['load_page']	= "prayerchain/members/entry_form";
+			$this->data['page_title']	= 'Edit Prayer Point';
+			$this->data['serial_nos'] 	= $this->Serial_nos_m->order_by('id', 'asc')->get_all();
+			$this->data['point'] 		= $this->Prayer_point_m->get($id);
+			$this->data['form']			= 'prayerpoints/forms/edit_points';
+			$this->data['load_page']	= "prayerpoints/points/entry_form";
 			$this->session->set_flashdata("danger", validation_errors());
 			$this->template->admintemplate($this->data);
 		}else{
-			$data = $this->Members_m->array_from_post(array(
-				'center_id',
-				'local_id',
-                'lang_id',
-                'time_id',
-                'bro_sis',
-                'eng_name',
-                'mal_name',
-                'tam_name',
-                'tel_name',
-                'hin_name',
-                'kan_name',
-                'mobile',
-                'group_no',
+			$data = $this->Prayer_point_m->array_from_post(array(
+				'serial_no',
+				'title',
+                'point_eng',
+                'point_mal',
+                'point_tam',
+                'point_tel',
+                'point_hin',
+                'point_kan'
 			));
 			$data['status'] = 1;
-			$this->Members_m->update($id, $data);
+			$this->Prayer_point_m->update($id, $data);
 			$this->session->set_flashdata("success", "Data saved successfully");
-			redirect('prayerchain/members');
+			redirect('prayerpoints');
 	}
 }
 
 	public function delete(){
 		$ids = $this->input->post('ids');
 		for ($i=0; $i < count($ids); $i++){
-			$this->db->where('id', $ids[$i])->delete('members');
+			$this->db->where('id', $ids[$i])->delete('prayer_points');
 		}
 		$response = array ( 'status' => 200, 'msg' => "your data deleted successfully" );
 		echo json_encode($response);
 	}
-	
-	public function print_member_data($centerId, $localId, $groupNo, $timeId){
-			$this->db->select('m.*, cf.centerName, lf.localName, pt.prayer_time,l.language')->from('members as m')
-				->join('center_fhs as cf', 'cf.id = m.center_id', 'left')
-				->join('local_fhs as lf', 'lf.id = m.local_id', 'left')
-				->join('prayer_time as pt', 'pt.id = m.time_id', 'left')
-				->join('languages as l', 'l.id = m.lang_id', 'left');
-				if($centerId != 'all'){
-					$this->db->where('m.center_id', $centerId);
-				}
-				if($localId != 'all'){
-					$this->db->where('m.local_id', $localId);
-				}
-				if($timeId != 'all'){
-					$this->db->where('m.time_id', $timeId);
-				}
-				if($groupNo != 'all'){
-					$this->db->where('m.group_no', $groupNo);
-				}
-				$this->db->order_by('m.group_no', 'asc');
-				$this->data['members'] = $this->db->get()->result();
-				$this->load->view('members/print_members', $this->data);
-		}
 	
 }

@@ -2,7 +2,7 @@
         <link rel="stylesheet" href="<?= site_url('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
         <link rel="stylesheet" href="<?= site_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css'); ?>">
 
-        <form id="quickForm" action="<?= site_url('masters/headers-data/save') ?>" method="POST" enctype="multipart/form-data">
+        <form id="quickForm" action="<?= site_url('masters/Headers_data/save') ?>" method="POST" enctype="multipart/form-data">
             <div class="card-body row">
                 <div class="form-group col-sm-12 col-md-3">
                     <label for="lang_id">Language</label>

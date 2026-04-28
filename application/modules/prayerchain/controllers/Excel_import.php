@@ -5,7 +5,7 @@ class Excel_import extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Chain Prayer';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index(){
 		$this->data['page_title'] = 'Excel Import';
@@ -56,7 +56,7 @@ class Excel_import extends Admin_Controller {
 			$html .='<td><input type="text" name="local_name[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['local_id'].'" /></td>';
 			$html .='<td><input type="text" name="lang_code[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['lang_id'].'" /></td>';
 			$html .='<td><input type="text" name="prayer_time[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['time_id'].'" /></td>';
-			$html .='<td><input type="text" name="bro-sis[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['bro_sis'].'" /></td>';
+			$html .='<td><input type="text" name="bro_sis[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['bro_sis'].'" /></td>';
 			$html .='<td><input type="text" name="eng_name[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['eng_name'].'" /></td>';
 			$html .='<td><input type="text" name="mal_name[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['mal_name'].'" /></td>';
 			$html .='<td><input type="text" name="tam_name[]" class="form-control form-control-sm text-xs" value="'.$data[$i]['tam_name'].'" /></td>';
@@ -77,7 +77,7 @@ class Excel_import extends Admin_Controller {
 		$localName 	= $this->input->post('local_name');
 		$langCode 	= $this->input->post('lang_code');
 		$prayerTime	= $this->input->post('prayer_time');
-		$broSis 	= $this->input->post('bro-sis');
+		$broSis 	= $this->input->post('bro_sis');
 		$engName 	= $this->input->post('eng_name');
 		$malName 	= $this->input->post('mal_name');
 		$tamName 	= $this->input->post('tam_name');

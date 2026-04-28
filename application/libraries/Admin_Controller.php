@@ -9,6 +9,7 @@ class Admin_Controller extends MY_Controller {
 		$this->load->model(array(
 			'settings/Compnay_m',
 			'settings/Settings_m',
+			'settings/Center_timing_m',
 			'masters/Times_m',
 			'masters/Centerfhs_m',
 			'masters/Localfhs_m',
@@ -17,7 +18,8 @@ class Admin_Controller extends MY_Controller {
 			'masters/Terms_m',
 			'masters/Headers_m',
 			'prayerchain/Members_m',
-			'prayerpoints/Serial_nos_m'
+			'prayerpoints/Serial_nos_m',
+			'prayerpoints/Prayer_point_m'
 			
 			));
 		$this->load->helper('date');

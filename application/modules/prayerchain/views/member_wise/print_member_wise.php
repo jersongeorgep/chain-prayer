@@ -1,106 +1,149 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-    <head>
-        <title>Prayer Group List</title>
+
+<head>
+    <title>Prayer Group List</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="<?= site_url('assets/plugins/fontawesome-free/css/all.min.css'); ?>">
     <link rel="stylesheet" href="<?= site_url('assets/dist/css/adminlte.min.css'); ?>">
-    <style type="text/css">body{ margin:0px; font-family:verdana,Arial;color:#000; font-family:Verdana, Geneva, sans-serif; font-size:12px;}
-    .table>tbody>tr>td,.table>tbody>tr>th { border-top: none !important; margin: 0px !important; padding: 0px !important; }
-    a{color:#000;text-decoration:none;}
-    @media print {
-      .page-break  { display:block; page-break-before:always; }
-      @page {
-        /* size: A4; */ /* DIN A4 standard, Europe */
-        margin:5mm 0mm 5mm 5mm;
+    <style type="text/css">
+        body {
+            font-family: verdana, Arial;
+            color: #000;
+            font-family: Verdana, Geneva, sans-serif;
+            font-size: 12px;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: auto;
+            overflow: hidden;
         }
-    }
 
+        .table>tbody>tr>td,
+        .table>tbody>tr>th {
+            border-top: none !important;
+            margin: 0px !important;
+            padding: 0px !important;
+        }
+
+        a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        @media print {
+            .print:last-child {
+                page-break-after: avoid;
+                page-break-inside: avoid;
+                margin-bottom: 0px;
+            }
+
+            .page-break {
+                page-break-before: always;
+                page-break-after: avoid;
+            }
+
+            @page {
+                /* size: A4; */
+                /* DIN A4 standard, Europe */
+                margin: 15mm 15mm 15mm 15mm !important;
+            }
+        }
     </style>
-    </head>
-    <body onLoad="self.print()"><center>
-<?php if(!empty($viewMembers)): ?>
-<section class="invoice" id="group_list">
- <?php foreach ($viewMembers as  $memberValue): 
-    $headers = $this->db->select('*')->from('header_data')->where('lang_id', $memberValue->lang_id)->get()->row();
-    $terms = $this->db->select('*')->from('terms')->where('lang_id', $memberValue->lang_id)->get()->row();
-    ?>   
-<div class="row">
-    <div class="col-12 text-center">
-        <table class="table table-sm">
-            <tbody>
-                <tr>
-                    <td class="pb-0">
-                        <h5 class="text-bold text-larger"><?= $headers->praise; ?></h5>
-                        <h3 class="text-bold text-larger"><?= $headers->title; ?></h3>
-                        <h4 class="text-bold mt-0"><?= $headers->details; ?></h4>
-                        <p class="text-sm"><?= $headers->verses; ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="pt-0 pb-0">
-                        <h5 class="text-bold"><?= strtoupper('Prayer Chain Group'); ?> <?= $group_no; ?> <small><span class="pull-right"><?= date('d-m-Y'); ?></span></small></h5>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+</head>
 
-    <div class="col-6 m-0">
-        <table class="table table-sm p-0">
-            <tbody>
-                <?php foreach ($left_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $memberValue->lang_id) ?>
-                    <tr>
-                        <td width="20%"><?= $value->prayer_time; ?> </td>
-                        <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0 p-0 text-md"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
-                            <?php endforeach; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="col-6 m-0">
-        <table class="table table-sm text-sm p-0">
-            <tbody>
-                <?php foreach ($right_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $memberValue->lang_id); ?>
-                    <tr>
-                        <td width="20%"><?= $value->prayer_time; ?> </td>
-                        <td><?php foreach ($members as  $value) : ?>
-                                <p class="text-bold mb-0 p-0 text-md"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
-                            <?php endforeach; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-12 mt-0 p-0">
-        <table class="table table-sm p-0 m-0">
-            <tbody>
+<body onLoad="self.print()">
+    <?php if (!empty($viewMembers)) : ?>
+        <?php foreach ($viewMembers as  $memberValue) :
+            $language = $this->db->select('*')->from('languages')->where('id', $memberValue->lang_id)->get()->row();
+            $headers = $this->db->select('*')->from('header_data')->where('lang_id', $memberValue->lang_id)->get()->row();
+            $terms = $this->db->select('*')->from('terms')->where('lang_id', $memberValue->lang_id)->get()->row();
+        ?>
+            <table class="table table-sm m-0 p-0">
                 <tr>
-                    <td colspan="3">
-                        <h5 class="text-bold text-center"><?= $terms->title; ?></h5>
-                        <p class="text-sm m-0 p-0"><?= $terms->terms; ?></p>
+                    <td colspan="2">
+                        <table class="table table-sm m-0 p-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <h5 class="text-bold text-larger m-0"><?= $headers->praise; ?></h5>
+                                        <h3 class="text-bold text-large m-0 p-1"><?= $headers->title; ?></h3>
+                                        <h4 class="text-bold mt-0 p-1"><?= $headers->details; ?></h4>
+                                        <p class="text-sm m-0"><?= $headers->verses; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <h5 class="text-bold"><?= strtoupper('Prayer Chain Group'); ?> <?= $group_no; ?> <small><span class="pull-right">(<?= date('d-m-Y'); ?>)</span></small></h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
                 </tr>
-                <tr><td class="text-center text-md"><b><?= $memberValue->bro_sis; ?> <?= $memberValue->mal_name; ?> </b></td>
-                    <td class="text-center text-lg"><b><?= $memberValue->localName; ?></b></td>
-                    <td class="text-center text-lg"><b><?= $memberValue->prayer_time; ?></b></td>
+                <tr>
+                    <td>
+                        <table class="table table-sm m-0">
+                            <tbody>
+                                <?php foreach ($left_time as $value) : ?>
+                                    <?php $members =  members_time_slot($group_no, $value->id, $memberValue->lang_id) ?>
+                                    <tr>
+                                        <td width="20%" class="text-bold m-0"><?= $value->prayer_time; ?> </td>
+                                        <td><?php foreach ($members as  $value) : ?>
+                                                <p class="text-bold text-sm m-0 p-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
+                                            <?php endforeach; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table table-sm m-0">
+                            <tbody>
+                                <?php foreach ($right_time as $value) : ?>
+                                    <?php $members =  members_time_slot($group_no, $value->id, $memberValue->lang_id); ?>
+                                    <tr>
+                                        <td width="20%" class="text-bold m-0"><?= $value->prayer_time; ?> </td>
+                                        <td><?php foreach ($members as  $value) : ?>
+                                                <p class="text-bold text-sm m-0 p-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
+                                            <?php endforeach; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="page-break"></div>
-<?php endforeach; ?>
-</section>
-<?php endif; ?>
-</center></body></html>
+                <tr>
+                    <td colspan="2">
+                        <table class="table table-sm m-0">
+                            <tbody>
+                                <tr>
+                                    <td colspan="3"><h5 class="text-bold text-center m-0 p-1"><?= $terms->title; ?></h5></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <p class="text-sm m-0 p-0"><?= $terms->terms; ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <?php
+                                    $lang_name = $language->lang_code . "_name"; ?>
+                                    <td class="text-center text-md"><b><?= $memberValue->bro_sis; ?> <?= $memberValue->$lang_name; ?> </b></td>
+                                    <td class="text-center text-lg"><b><?= $memberValue->localName; ?></b></td>
+                                    <td class="text-center text-lg"><b><?= $memberValue->prayer_time; ?></b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <div class="page-break"></div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</body>
+
+</html>
 <!-- <button type="button" class="btn btn-success btn-sm mt-2" id="printBtn" onclick="printMe()"><i class="fa fa-print"></i> Print</button> -->
 <script>
     /* function printMe() {

@@ -13,7 +13,7 @@
         		<div class="card">
         			<div class="card-header">
         				<h3 class="card-title">
-        					<span><a href="<?= site_url('prayerpoints/makeserialnumber/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
+        					<span><a href="<?= site_url('prayerpoints/makeSerialNumber/create-new'); ?>" class="btn btn-xs btn-success"><i class="fa fa-plus"></i> New </a></span>
         					<span><button type="button" id="delete_btn" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button></span>
         				</h3>
         			</div>
@@ -38,7 +38,7 @@
 													<td><?= $slNo; ?></td>
 													<td><input type="checkbox" name="ids[]" id="ids_" value="<?= $val->id; ?>"></td>
 													<td><?= $val->serial_no; ?></td>
-													<td><a href="<?= site_url('prayerpoints/makeserialnumber/edit/' . $val->id); ?>" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a></td>
+													<td><a href="<?= site_url('prayerpoints/makeSerialNumber/edit/' . $val->id); ?>" class="btn btn-xs btn-success"><i class="fas fa-edit"></i></a></td>
 												</tr>
 											<?php $slNo++;  endforeach; ?>
 											<?php endif; ?>
@@ -107,7 +107,7 @@
         				if (confirm("Do you really want to delete records?")) {
         					$.ajax({
         						type: "POST",
-        						url: base_url + "prayerpoints/makeserialnumber/delete",
+        						url: base_url + "prayerpoints/makeSerialNumber/delete",
         						async: false,
         						cache: false,
         						data: {

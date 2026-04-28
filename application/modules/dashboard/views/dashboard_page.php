@@ -139,5 +139,6 @@
 		</div>
 	</div>
 </div>
+
 <!-- Row -->
 <script src="<?= site_url('assets/dist/js/dashboard-data.js'); ?>"></script>

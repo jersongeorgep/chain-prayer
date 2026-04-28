@@ -5,7 +5,7 @@ class Headers_data extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Masters';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index(){
 		$this->data['page_title'] = 'All Headers';

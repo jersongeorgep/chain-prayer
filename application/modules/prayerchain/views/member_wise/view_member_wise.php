@@ -1,6 +1,7 @@
 <?php if(!empty($viewMembers)): ?>
 <section class="invoice" id="group_list">
  <?php foreach ($viewMembers as  $memberValue): 
+    $language = $this->db->select('*')->from('languages')->where('id', $memberValue->lang_id)->get()->row();
     $headers = $this->db->select('*')->from('header_data')->where('lang_id', $memberValue->lang_id)->get()->row();
     $terms = $this->db->select('*')->from('terms')->where('lang_id', $memberValue->lang_id)->get()->row();
     ?>   
@@ -29,9 +30,9 @@
         <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($left_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $memberValue->lang_id) ?>
+                    <?php $members =  members_time_slot($group_no, $value->id, $memberValue->lang_id) ?>
                     <tr>
-                        <td width="20%"><?= $value->prayer_time; ?> </td>
+                        <td width="20%" class="text-bold"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
                                 <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
                             <?php endforeach; ?>
@@ -45,9 +46,9 @@
         <table class="table table-sm text-sm">
             <tbody>
                 <?php foreach ($right_time as $value) : ?>
-                    <?php $members =  members_time_slot($center_id, $group_no, $value->id, $memberValue->lang_id); ?>
+                    <?php $members =  members_time_slot($group_no, $value->id, $memberValue->lang_id); ?>
                     <tr>
-                        <td width="20%"><?= $value->prayer_time; ?> </td>
+                        <td width="20%" class="text-bold"><?= $value->prayer_time; ?> </td>
                         <td><?php foreach ($members as  $value) : ?>
                                 <p class="text-bold mb-0"><?= $value->bro_sis; ?> <?= $value->memberName; ?> (<?= (($value->code) ? $value->code : code_generate($value->localName)); ?>)</p>
                             <?php endforeach; ?>
@@ -67,7 +68,9 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-center text-md"><b><?= $memberValue->bro_sis; ?> <?= $memberValue->mal_name; ?> </b></td>
+                    <?php 
+                    $lang_name = $language->lang_code . "_name"; ?>
+                    <td class="text-center text-md"><b><?= $memberValue->bro_sis; ?> <?= $memberValue->$lang_name; ?> </b></td>
                     <td class="text-center text-lg"><b><?= $memberValue->localName; ?></b></td>
                     <td class="text-center text-lg"><b><?= $memberValue->prayer_time; ?></b></td>
                 </tr>
@@ -78,8 +81,19 @@
 <?php endforeach; ?>
 </section>
 <?php endif; ?>
+
 <!-- <button type="button" class="btn btn-success btn-sm mt-2" id="printBtn" onclick="printMe()"><i class="fa fa-print"></i> Print</button> -->
 <a href="<?= site_url('prayerchain/printdata/print_member_wise/'.$center_id.'/'.$group_no.'/'.$member_value);?>" target="_blank" class="btn btn-success btn-sm mt-2"><i class="fa fa-print"></i> Print</a>
+<?php 
+    if($member_value != 'all'): 
+    $currentMember = $this->db->select('email')->from('members')->where('id', $member_value)->get()->row();
+    if(!empty($currentMember->email)):
+?>
+    <a href="<?= site_url('prayerchain/printdata/send_member_wise/'.$center_id.'/'.$group_no.'/'.$member_value);?>" class="btn btn-primary btn-sm mt-2" ><i class="fa fa-envelope"></i> E-mail</a>
+<?php 
+    endif;
+    endif;
+?>
 <script>
     function printMe() {
     var disp_setting="toolbar=yes,location=no,";

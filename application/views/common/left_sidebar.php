@@ -42,7 +42,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?= site_url('prayerchain/members'); ?>" class="nav-link <?= (($page_title == "Members List" || $page_title == "New Member" || $page_title == "Edit Member") ? "active" : ""); ?>">
+              <a href="<?= site_url('prayerchain/members'); ?>" class="nav-link <?= (($page_title == "Members Register" || $page_title == "New Member" || $page_title == "Edit Member") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Members</p>
               </a>
@@ -80,19 +80,19 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?= site_url('prayerpoints/makeserialnumber'); ?>" class="nav-link <?= (($page_title == "Serial No List" || $page_title == "New Serial No" || $page_title == "Edit Serial No") ? "active" : ""); ?>">
+              <a href="<?= site_url('prayerpoints/makeSerialNumber'); ?>" class="nav-link <?= (($page_title == "Serial No List" || $page_title == "New Serial No" || $page_title == "Edit Serial No") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Make Serial Number</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= site_url('prayerpoints/Prayerpoints'); ?>" class="nav-link <?= (($page_title == "Prayer Point List" || $page_title == "New Prayer Point" || $page_title == "Edit Prayer Point") ? "active" : ""); ?>">
+              <a href="<?= site_url('prayerpoints'); ?>" class="nav-link <?= (($page_title == "Prayer Point List" || $page_title == "New Prayer Point" || $page_title == "Edit Prayer Point") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Payer Points</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= site_url('prayerchain/printdata'); ?>" class="nav-link <?= (($page_title == "Group wise") ? "active" : ""); ?>">
+              <a href="<?= site_url('prayerpoints/printdata'); ?>" class="nav-link <?= (($page_title == "Serial wise") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Serial Wise</p>
               </a>
@@ -155,6 +155,14 @@
               <a href="<?= site_url('settings') ?>" class="nav-link <?= (($page_title == "Separate Center") ? "active" : ""); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Separate Centers</p>
+              </a>
+              <a href="<?= site_url('settings/members-limit-settings') ?>" class="nav-link <?= (($page_title == "Members Limit Settings") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Members Limit</p>
+              </a>
+              <a href="<?= site_url('settings/refresh-groups') ?>" class="nav-link <?= (($page_title == "Refresh Groups") ? "active" : ""); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Refresh Group</p>
               </a>
             </li>
           </ul>

@@ -5,7 +5,7 @@ class Dashboard extends Admin_Controller {
 		{
 			parent::__construct();
 			$this->data['page_menu'] = 'Dashboard';
-			//isLogedUser();	
+			isLogedUser();	
 		}
 	public function index($pages=NULL){
 		//print_r($this->session->userdata());
