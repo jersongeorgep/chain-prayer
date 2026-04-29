@@ -14,8 +14,12 @@ class Pdf extends Dompdf
 	
 	function __construct()
 	{
-		parent ::__construct();
-		define("DOMPDF_UNICODE_ENABLED", true);
+		parent::__construct();
+		$this->set_option('isRemoteEnabled', true);
+		$this->set_option('isFontSubsettingEnabled', true);
+		if (!defined('DOMPDF_UNICODE_ENABLED')) {
+			define("DOMPDF_UNICODE_ENABLED", true);
+		}
 	}
 }
 ?>

@@ -43,6 +43,7 @@
 </div>
 </section>
 <button type="button" class="btn btn-success btn-sm mt-2" id="printBtn" onclick="printMe()"><i class="fa fa-print"></i> Print</button> 
+<a href="<?= site_url('prayerpoints/printdata/print_pdf/'.$serial_no->id.'/'.$language->id); ?>" class="btn btn-primary btn-sm mt-2" target="_blank"><i class="fa fa-file-pdf"></i> PDF</a>
 
 <script>
     function printMe() {
@@ -60,8 +61,8 @@
         docprint.document.write('<link rel="stylesheet" href="'+ base_url +'assets/plugins/fontawesome-free/css/all.min.css">');
         docprint.document.write('<link rel="stylesheet" href="'+ base_url +'assets/dist/css/adminlte.min.css">');
         docprint.document.write('<style type="text/css">body{ margin:0px;');
-            docprint.document.write('font-family:verdana,Arial;color:#000;');
-            docprint.document.write('font-family:Verdana, Geneva, sans-serif; font-size:14px;}');
+            docprint.document.write('font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "DejaVu Sans"; color:#000;');
+            docprint.document.write('font-size:14px;}');
             docprint.document.write('.table>tbody>tr>td,.table>tbody>tr>th { border-top: none; !important}');
             docprint.document.write('@media print {.page-break  { display:block; page-break-before:always; } @page { margin:15mm 15mm 15mm 15mm;}}');
         <?php if($language->lang_code == 'hin'): ?>
