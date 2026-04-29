@@ -5415,7 +5415,7 @@ EOT;
         $h,
         $imageWidth,
         $imageHeight,
-        $channels = 3,
+        $channels,
         $imgname
     ) {
         if ($this->image_iscached($imgname)) {

@@ -27,6 +27,7 @@ class Printdata extends Admin_Controller {
 	}
 
 	public function print_pdf($serial_id, $lang_id){
+		error_reporting(0);
 		$this->data['serial_no'] 	= $this->Serial_nos_m->get($serial_id);
 		$this->data['language'] 	= $this->Languages_m->get($lang_id);
 		$this->data['headers'] 		= $this->db->select('*')->from('header_data')->where('lang_id', $lang_id)->get()->row();
@@ -38,6 +39,7 @@ class Printdata extends Admin_Controller {
 		$this->pdf->loadHtml($html);
 		$this->pdf->setPaper('A4', 'portrait');
 		$this->pdf->render();
+		if (ob_get_length()) ob_clean();
 		$this->pdf->stream("Prayer_Points_".$this->data['serial_no']->serial_no.".pdf", array("Attachment" => 0));
 	}
 

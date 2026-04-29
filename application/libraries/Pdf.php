@@ -22,4 +22,3 @@ class Pdf extends Dompdf
 		}
 	}
 }
-?>
