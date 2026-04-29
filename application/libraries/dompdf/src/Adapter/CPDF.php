@@ -179,7 +179,7 @@ class CPDF implements Canvas
      * @param string $orientation The orientation of the document (either 'landscape' or 'portrait')
      * @param Dompdf $dompdf The Dompdf instance
      */
-    public function __construct($paper = "letter", $orientation = "portrait", Dompdf $dompdf)
+    public function __construct($paper, $orientation, Dompdf $dompdf)
     {
         if (is_array($paper)) {
             $size = $paper;
