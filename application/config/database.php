@@ -95,7 +95,9 @@ $query_builder = TRUE;
 	'save_queries' => TRUE,
 	'port' => 3308
 ); */
-if (isset($_SERVER['CI_ENV'])) {
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+
+if ($host !== 'localhost' && $host !== '127.0.0.1') {
 
     $db['default'] = array(
         'dsn'      => '',
